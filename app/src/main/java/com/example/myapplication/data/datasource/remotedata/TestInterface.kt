@@ -1,5 +1,7 @@
 package com.example.myapplication.data.datasource.remotedata
 
+
+
 import com.example.myapplication.data.bodymodel.GetUserModelBody
 import com.example.myapplication.data.models.getuser.GetUserModel
 import com.example.myapplication.data.models.imageupdatemodel.ImageUpdateModel
@@ -13,17 +15,17 @@ import retrofit2.http.POST
 import retrofit2.http.Part
 
 
-interface ImageUpdateInterface {
+interface TestInterface {
 
     @Multipart
     @POST("upload")
-    suspend fun getImageUpdate(
+    fun getImageUpdate(
         @Part file:MultipartBody.Part,
         @Part("myAddress") myAddress: RequestBody,
         @Part("privateKey") privateKey: RequestBody,
         @Part("type") type: RequestBody,
         @Part("_content") _content: RequestBody,
         @Part("_hashtag") _hashtag: RequestBody
-    ): Response<ImageUpdateModel>
+    ): Call<ImageUpdateModel>
 
 }

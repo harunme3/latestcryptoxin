@@ -28,13 +28,26 @@ class ImageUpdateViewModel  @Inject constructor (private val imageUpdateRepo: Im
             = MutableStateFlow(ImageUpdateState.Empty)
     val _getUserStateFlow: StateFlow<ImageUpdateState> = getImageUpdateStateFlow
 
-    fun getImageUpdateCall(file: MultipartBody.Part, myAddress: RequestBody, privateKey:RequestBody, type:RequestBody) {
+    fun getImageUpdateCall(
+        file: MultipartBody.Part,
+        myAddress: RequestBody,
+        privateKey:RequestBody,
+        type:RequestBody, _content:RequestBody,
+        _hashtag:RequestBody
+    ) {
 
         viewModelScope.launch {
 
             getImageUpdateStateFlow.value = ImageUpdateState.Loading
 
-            imageUpdateRepo.getImageUpdateRepo(file,myAddress,privateKey,type)
+            imageUpdateRepo.getImageUpdateRepo(
+                 file = file,
+                 myAddress = myAddress,
+                 privateKey = privateKey,
+                 type = type,
+                _content=_content,
+                _hashtag=_hashtag
+            )
                 .catch { e->
                 getImageUpdateStateFlow.value= ImageUpdateState.Error(message = "Exception $e")
             }.collect {

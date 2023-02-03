@@ -1,4 +1,5 @@
 package com.example.myapplication.di
+import android.util.Log
 import com.example.myapplication.data.datasource.remotedata.*
 import com.example.myapplication.utilities.UrlConstants
 import dagger.Module
@@ -66,7 +67,7 @@ class NetworkModule {
     @Singleton
     @Provides
     fun provideImageUpdate(retrofitBuilder: Retrofit.Builder): ImageUpdateInterface {
-        return  retrofitImageUpdate.build().create(ImageUpdateInterface::class.java)
+        return  retrofitBuilder.build().create(ImageUpdateInterface::class.java)
     }
 
 }
