@@ -67,13 +67,12 @@ fun EditProfile( imageUpdateViewModel: ImageUpdateViewModel= hiltViewModel()){
     }
 
 
+
+
     val launcher = rememberLauncherForActivityResult(contract =
      ActivityResultContracts.GetContent()) { uri: Uri? ->
         selectedImage = uri
      }
-    val response = remember {
-        mutableStateOf("")
-    }
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -83,15 +82,8 @@ fun EditProfile( imageUpdateViewModel: ImageUpdateViewModel= hiltViewModel()){
                     .background(Color.White)
                     .padding(horizontal = 16.dp),
             ) {
-                Text(
-                    text = response.value,
-                    color = Color.Black,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold, modifier = Modifier
-                        .padding(10.dp)
-                        .fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
+
+                Text(text = stateUpdateImage.value.toString())
 
                 Box(modifier = Modifier.fillMaxHeight(0.05f)) {
                     Row(
@@ -143,16 +135,6 @@ fun EditProfile( imageUpdateViewModel: ImageUpdateViewModel= hiltViewModel()){
                                 val _content =
                                     "165".toRequestBody("text/plain".toMediaTypeOrNull())
 
-//                                postDataUsingRetrofit(
-//                                    ctx,
-//                                    response,
-//                                    file,
-//                                    myAddress,
-//                                    privateKey,
-//                                    type,
-//                                    _content,
-//                                    _hashtag
-//                                )
 
                                 imageUpdateViewModel.getImageUpdateCall(
                                     file,
@@ -321,58 +303,4 @@ fun EditProfile( imageUpdateViewModel: ImageUpdateViewModel= hiltViewModel()){
 
 
 
-private fun postDataUsingRetrofit(
-    ctx: Context,
-    result: MutableState<String>,
-    file: MultipartBody.Part,
-    myAddress: RequestBody,
-    privateKey: RequestBody,
-    type: RequestBody,
-    _content: RequestBody,
-    _hashtag: RequestBody
-) {
-    var url = "http://128.199.18.36:6000/"
-    // on below line we are creating a retrofit
-    // builder and passing our base url
-    val retrofit = Retrofit.Builder()
-        .baseUrl(url)
-        // as we are sending data in json format so
-        // we have to add Gson converter factory
-        .addConverterFactory(GsonConverterFactory.create())
-        // at last we are building our retrofit builder.
-        .build()
-    // below the line is to create an instance for our retrofit api class.
-    val retrofitAPI = retrofit.create(TestInterface::class.java)
-    // passing data from our text fields to our model class.
 
-    // calling a method to create an update and passing our model class.
-    val call: Call<ImageUpdateModel> = retrofitAPI.getImageUpdate(
-        file = file,
-        myAddress = myAddress,
-        privateKey = privateKey,
-        type = type,
-        _content=_content,
-        _hashtag=_hashtag)
-    // on below line we are executing our method.
-    call!!.enqueue(object : Callback<ImageUpdateModel?> {
-        override fun onResponse(call: Call<ImageUpdateModel?>?, response: Response<ImageUpdateModel?>) {
-            // this method is called when we get response from our api.
-            Toast.makeText(ctx, "Data posted to API", Toast.LENGTH_SHORT).show()
-            // we are getting a response from our body and
-            // passing it to our model class.
-            val model: ImageUpdateModel? = response.body()
-            // on below line we are getting our data from model class
-            // and adding it to our string.
-            val resp =
-                "Response Code : " + response.code() + "\n" + "User Name : " + model!!.msg + "\n" + "Job : " + model!!.status
-            // below line we are setting our string to our response.
-            result.value = resp
-        }
-
-        override fun onFailure(call: Call<ImageUpdateModel?>?, t: Throwable) {
-            // we get error response from API.
-            result.value = "Error found is : " + t.message
-        }
-    })
-
-}

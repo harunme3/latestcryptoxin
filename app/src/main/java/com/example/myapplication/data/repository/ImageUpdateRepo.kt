@@ -28,7 +28,7 @@ constructor(private val imageUpdateInterface: ImageUpdateInterface) {
                 _content=_content,
                 _hashtag=_hashtag
             )
-            Log.d("1111",apiResponse.toString())
+            Log.e("1111",apiResponse.toString())
             if (apiResponse.isSuccessful) {
 
                 val result = apiResponse.body()

@@ -67,7 +67,7 @@ class NetworkModule {
     @Singleton
     @Provides
     fun provideImageUpdate(retrofitBuilder: Retrofit.Builder): ImageUpdateInterface {
-        return  retrofitBuilder.build().create(ImageUpdateInterface::class.java)
+        return  retrofitImageUpdate.build().create(ImageUpdateInterface::class.java)
     }
 
 }

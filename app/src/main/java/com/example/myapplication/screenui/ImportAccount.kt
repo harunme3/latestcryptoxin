@@ -55,16 +55,16 @@ fun ImportAccount(navController: NavController,
     if(state.value is ImportWalletState.Loaded)
     {
         val data=(state.value as ImportWalletState.Loaded).data
-        Log.e("1111", data.toString())
+        Log.v("1111", data.toString())
         getUserViewModel
             .getUserCall(
                 myAddress = data.address,
                )
-        Log.d("1111", stateGetUser.value.toString())
+
         if(stateGetUser.value is GetUserState.Loaded)
         {
             val getUserData=(stateGetUser.value as GetUserState.Loaded).data
-
+            Log.d("1111", getUserData.toString())
             LaunchedEffect(key1 = Unit) {
 
                 Log.v("1111", getUserData.toString())
@@ -72,7 +72,7 @@ fun ImportAccount(navController: NavController,
                 {
                  navController.navigate(Screens.DashBoard.route)
 
-                    if (inputText.length==66 && inputText.substring(0,2).lowercase()=="0x")
+                    if (inputText.length==66)
                     {
 
                         val customMnemonic="customMnemonic"
@@ -90,7 +90,7 @@ fun ImportAccount(navController: NavController,
                 }
                 else
                 {
-                    if (inputText.length==66 && inputText.substring(0,2).lowercase()=="0x")
+                    if (inputText.length==66)
                     {
 
                         val customMnemonic="customMnemonic"
@@ -186,17 +186,19 @@ fun ImportAccount(navController: NavController,
         Button(
             onClick = {
                 //check
-
-                if (inputText.length==66 && inputText.substring(0,2).lowercase()=="0x")
+Log.e("1111",inputText)
+                if (inputText.length==64)
                 {
-
+                    Log.v("1111",inputText)
                     importAccountModel
                         .importWalletCall(
                             privateKey = inputText,
                             mnemonic = "")
+
                 }
                 else
                 {
+                    Log.d("1111",inputText)
                     importAccountModel
                         .importWalletCall(
                             privateKey = "",
@@ -213,48 +215,15 @@ fun ImportAccount(navController: NavController,
         )
         {
 
-            if(state.value is ImportWalletState.Empty)
-            {
-                Text(text = "Import",
-                    style = TextStyle(
-                        color = cwhite,
-                        fontSize = 18.sp
-
-                    ),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)
-                )
-            }
-
-
-            if (state.value is ImportWalletState.Loading){
-
-                Text(text = "Importing",
-                    style = TextStyle(
-                        color = cwhite,
-                        fontSize = 18.sp
-
-                    ),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)
-                )
-
-            }
-
-
-            if (state.value is ImportWalletState.Error){
 
                 Text(text = "Import",
                     style = TextStyle(
                         color = cwhite,
                         fontSize = 18.sp
-
                     ),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)
                 )
-
-            }
 
 
         }

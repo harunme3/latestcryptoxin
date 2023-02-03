@@ -43,7 +43,7 @@ fun SplashScreen(navController: NavHostController,createWalletViewModels: Create
           Log.e("1111", createWalletViewModels.getWallet(walletId = 1).toString())
        //Write condition have account or not
 
-        if (false) {
+        if (true) {
             navController.popBackStack()
             navController.navigate(Screens.CreateImport.route)
         } else {
