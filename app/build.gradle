@@ -122,6 +122,9 @@ dependencies {
 //     accompanist
     implementation "com.google.accompanist:accompanist-drawablepainter:0.25.1"
 
+    //permission
+    implementation "com.google.accompanist:accompanist-permissions:0.29.1-alpha"
+
 
 
 }
