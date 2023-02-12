@@ -6,6 +6,7 @@ import com.example.myapplication.common.Resource
 import com.example.myapplication.data.datasource.remotedata.CreateWalletApiInterface
 import com.example.myapplication.data.datasource.roomdata.WalletDao
 import com.example.myapplication.data.datasource.roomdata.WalletEntity
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -29,12 +30,7 @@ class CreateWalletApiRepo  @Inject constructor(
         }
     }
 
-
-   //Room Database operation
-   suspend fun insertWallet(walletEntity: WalletEntity) = walletDao.insert(walletEntity)
-   suspend fun deleteWallet(walletEntity: WalletEntity) = walletDao.deleteNote(walletEntity)
-   suspend fun getWallet(walletId : Int) : WalletEntity = walletDao.getWallet(walletId)
-    val getAllWallet: LiveData<List<WalletEntity>> = walletDao.getWalletList()
+    fun insertWallet(walletEntity: WalletEntity) = walletDao.insert(walletEntity)
 
  }
 

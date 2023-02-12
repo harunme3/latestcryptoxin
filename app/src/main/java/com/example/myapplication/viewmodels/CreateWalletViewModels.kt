@@ -43,20 +43,5 @@ class CreateWalletViewModels @Inject constructor (private val createWalletApiRep
         }
     }
 
-    fun createWallet(walletEntity: WalletEntity) = viewModelScope.launch(Dispatchers.IO) {
-         createWalletApiRepo.insertWallet(walletEntity)
-    }
-
-    fun deleteWallet(walletEntity: WalletEntity){
-        viewModelScope.launch(Dispatchers.IO) {
-            createWalletApiRepo.deleteWallet(walletEntity)
-        }
-    }
-    fun getWallet(walletId:Int) = viewModelScope.launch(Dispatchers.IO) {
-        createWalletApiRepo.getWallet(walletId = walletId)
-    }
-
-    //Room Database
-     val getAllWallet: LiveData<List<WalletEntity>> = createWalletApiRepo.getAllWallet
 
 }

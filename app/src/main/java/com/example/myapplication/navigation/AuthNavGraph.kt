@@ -27,6 +27,10 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController){
             ImportAccount(navController)
         }
 
+        composable(Screens.MandatoryDetails.route){
+            MandatoryDetails(navController)
+        }
+
 
         composable(Screens.ReferralScreen.route+"/{mnemonic}/{privateKey}/{address}",arguments = listOf(
             navArgument("mnemonic")  { type = NavType.StringType },

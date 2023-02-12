@@ -8,6 +8,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -28,19 +30,19 @@ import com.example.myapplication.navigation.Screens
 import com.example.myapplication.ui.theme.RainbowColors
 import com.example.myapplication.ui.theme.cwhite
 import com.example.myapplication.viewmodels.CreateWalletViewModels
+import com.example.myapplication.viewmodels.WalletVM
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
-fun SplashScreen(navController: NavHostController,createWalletViewModels: CreateWalletViewModels = hiltViewModel()) {
+fun SplashScreen(navController: NavHostController,walletVM: WalletVM = hiltViewModel()) {
     val configuration = LocalConfiguration.current
-    val screenHeight = configuration.screenHeightDp
-    val screenWidth = configuration.screenWidthDp
 
-    LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(key1 = true) {
 
         delay(10)
-          Log.e("1111", createWalletViewModels.getWallet(walletId = 1).toString())
+
+
        //Write condition have account or not
 
         if (false) {
@@ -49,6 +51,7 @@ fun SplashScreen(navController: NavHostController,createWalletViewModels: Create
         } else {
             navController.popBackStack()
             navController.navigate(Graph.DASHBOARD)
+
         }
     }
 

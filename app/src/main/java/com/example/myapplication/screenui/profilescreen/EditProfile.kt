@@ -67,7 +67,9 @@ fun EditProfile( imageUpdateViewModel: ImageUpdateViewModel= hiltViewModel()){
     }
 
 
-
+    var multifiles : MutableList<MultipartBody.Part> = remember {
+        mutableStateListOf()
+    }
 
     val launcher = rememberLauncherForActivityResult(contract =
      ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -124,6 +126,8 @@ fun EditProfile( imageUpdateViewModel: ImageUpdateViewModel= hiltViewModel()){
                                 val requestFile = files.asRequestBody("image/*".toMediaTypeOrNull())
                                 val file = MultipartBody.Part.createFormData("file", files.name, requestFile)
 
+                                multifiles.add(file)
+
                                 val myAddress =
                                     "0x5Ac32b12daF2D5942403D3fc97f168Fa485C795C".toRequestBody("text/plain".toMediaTypeOrNull())
                                 val privateKey ="6a9cdaafc795b70dd6e700502de3d37d7dd77c1fb76198eff77a270d1c412a77".toRequestBody("text/plain".toMediaTypeOrNull())
@@ -134,15 +138,17 @@ fun EditProfile( imageUpdateViewModel: ImageUpdateViewModel= hiltViewModel()){
                                     "1dsd".toRequestBody("text/plain".toMediaTypeOrNull())
                                 val _content =
                                     "165".toRequestBody("text/plain".toMediaTypeOrNull())
-
+                                val videoHash =
+                                    "0".toRequestBody("text/plain".toMediaTypeOrNull())
 
                                 imageUpdateViewModel.getImageUpdateCall(
-                                    file,
+                                    multifiles,
                                     myAddress,
                                     privateKey,
                                     type,
                                     _content,
-                                    _hashtag
+                                    _hashtag,
+                                    videoHash
                                 )
 
                                 Log.e("1111",stateUpdateImage.value.toString())

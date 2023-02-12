@@ -14,4 +14,7 @@ sealed class Screens(val route:String){
     object ImportAccount: Screens("importAccount_route")
     object EditProfile:Screens("editProfile_route")
     object ReferralScreen:Screens("referral_route")
+    object ReferralPatternScreen:Screens("referralPattern_route")
+    object MandatoryDetails:Screens("mandatoryDetails_route")
+    object WalletDashboardScreen:Screens("walletDashboard_route")
 }

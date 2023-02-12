@@ -125,6 +125,17 @@ dependencies {
     //permission
     implementation "com.google.accompanist:accompanist-permissions:0.29.1-alpha"
 
+    //tooltip baloon
+    implementation "com.github.skydoves:balloon-compose:1.5.2"
+
+    //markdown text
+    implementation "com.halilibo.compose-richtext:richtext-commonmark:0.16.0"
+
+    //tree
+    implementation("io.github.mr0xf00:lazytreelist:0.1.0")
+
+
+
 
 
 }

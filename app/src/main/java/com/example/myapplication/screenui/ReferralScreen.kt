@@ -30,12 +30,13 @@ import com.example.myapplication.ui.theme.cwhite
 import com.example.myapplication.uistate.RegisterState
 import com.example.myapplication.viewmodels.CreateWalletViewModels
 import com.example.myapplication.viewmodels.RegisterViewModel
+import com.example.myapplication.viewmodels.WalletVM
 
 @Composable
 fun ReferralScreen(navController: NavController,
                    mnemonic: String, privateKey: String, address: String,
                    registerViewModel: RegisterViewModel = hiltViewModel(),
-                   createWalletViewModels: CreateWalletViewModels = hiltViewModel()
+                  walletVM: WalletVM = hiltViewModel()
 ){
     val state = registerViewModel._registrationStateFlow.collectAsState()
     var inputTextReferral by remember {
@@ -46,7 +47,7 @@ fun ReferralScreen(navController: NavController,
 
     if (state.value is RegisterState.Loaded){
 
-        createWalletViewModels.createWallet(WalletEntity(null,mnemonicPhrase=mnemonic,privateKey=privateKey,address=address))
+        walletVM.createWallet(WalletEntity(null,mnemonicPhrase=mnemonic,privateKey=privateKey,address=address))
         navController.navigate(Graph.DASHBOARD)
     }
 

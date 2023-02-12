@@ -28,9 +28,6 @@ class NetworkModule {
     fun provideRetrofitBuilder():Retrofit.Builder{
        return Retrofit.Builder().baseUrl(UrlConstants.BASE_URL).addConverterFactory(GsonConverterFactory.create())
     }
-    var retrofitApiV1 = Retrofit.Builder()
-        .baseUrl("http://128.199.18.36:8556/")
-        .addConverterFactory(GsonConverterFactory.create())
 
     @Singleton
     @Provides
@@ -69,5 +66,14 @@ class NetworkModule {
     fun provideImageUpdate(retrofitBuilder: Retrofit.Builder): ImageUpdateInterface {
         return  retrofitImageUpdate.build().create(ImageUpdateInterface::class.java)
     }
+
+
+
+    @Singleton
+    @Provides
+    fun provideAllPost(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient): AllPostI {
+        return  retrofitBuilder.client(okHttpClient).build().create(AllPostI::class.java)
+    }
+
 
 }

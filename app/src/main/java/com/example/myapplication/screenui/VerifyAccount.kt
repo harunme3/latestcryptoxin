@@ -28,11 +28,16 @@ import com.example.myapplication.navigation.Graph
 import com.example.myapplication.navigation.Screens
 import com.example.myapplication.ui.theme.*
 import com.example.myapplication.viewmodels.CreateWalletViewModels
+import com.example.myapplication.viewmodels.WalletVM
 
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun VerifyAccount(navController: NavController,  mnemonic: String, privateKey: String, address: String,createWalletViewModels: CreateWalletViewModels = hiltViewModel()) {
+fun VerifyAccount(
+                 navController: NavController,
+                  mnemonic: String, privateKey: String,
+                  address: String,
+               walletVM: WalletVM = hiltViewModel()) {
 
     val context=LocalContext.current
     val mnemonicList=mnemonic.split(" ").toList()
@@ -140,7 +145,6 @@ fun VerifyAccount(navController: NavController,  mnemonic: String, privateKey: S
                                     .clickable {
                                         selectedMnemonicList.add(it)
                                         totalMnemonicList.remove(it)
-
                                     },
                                 color= cwhite,
                                 overflow = TextOverflow.Ellipsis,
@@ -160,7 +164,7 @@ fun VerifyAccount(navController: NavController,  mnemonic: String, privateKey: S
                 //Room database implementation and navigate to dashboard
 
                         Log.d("1111","$mnemonic $privateKey $address")
-                        createWalletViewModels.createWallet(WalletEntity(null,mnemonicPhrase=mnemonic,privateKey=privateKey,address=address))
+                        walletVM.createWallet(WalletEntity(null,mnemonicPhrase=mnemonic,privateKey=privateKey,address=address))
                         Toast.makeText(context, "Welcome to CryptoxIN", Toast.LENGTH_SHORT).show()
                         navController.navigate(Graph.DASHBOARD)
                     },

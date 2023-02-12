@@ -18,12 +18,13 @@ interface ImageUpdateInterface {
     @Multipart
     @POST("upload")
     suspend fun getImageUpdate(
-        @Part file:MultipartBody.Part,
+        @Part file:List<MultipartBody.Part>,
         @Part("myAddress") myAddress: RequestBody,
         @Part("privateKey") privateKey: RequestBody,
         @Part("type") type: RequestBody,
         @Part("_content") _content: RequestBody,
-        @Part("_hashtag") _hashtag: RequestBody
+        @Part("_hashtag") _hashtag: RequestBody,
+        @Part("videoHash") videoHash: RequestBody
     ): Response<ImageUpdateModel>
 
 }

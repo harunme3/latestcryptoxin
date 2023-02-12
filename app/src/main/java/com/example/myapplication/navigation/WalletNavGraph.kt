@@ -1,13 +1,11 @@
 package com.example.myapplication.navigation
 
-import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.example.myapplication.screenui.HomeScreen
 import com.example.myapplication.screenui.WalletScreen
-
+import com.example.myapplication.screenui.walletui.WalletDashboard
 
 
 fun NavGraphBuilder.walletNavGraph(navController: NavHostController){
@@ -16,7 +14,11 @@ fun NavGraphBuilder.walletNavGraph(navController: NavHostController){
         startDestination = Screens.Wallet.route
     ){
         composable(Screens.Wallet.route){
-            WalletScreen()
+            WalletScreen(navController)
+        }
+
+        composable(Screens.WalletDashboardScreen.route){
+            WalletDashboard()
         }
 
     }

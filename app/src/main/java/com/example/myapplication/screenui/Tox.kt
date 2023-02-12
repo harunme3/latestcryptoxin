@@ -3,6 +3,7 @@ package com.example.myapplication.screenui
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
+import android.view.View
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
@@ -10,10 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +23,10 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,6 +34,9 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.R
 import com.example.myapplication.ui.theme.*
 import com.example.myapplication.viewmodels.ImageUpdateViewModel
+import com.skydoves.balloon.*
+import com.skydoves.balloon.compose.Balloon
+import com.skydoves.balloon.compose.rememberBalloonBuilder
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -42,6 +47,22 @@ import java.io.File
 @Composable
 fun ToxScreen( imageUpdateViewModel: ImageUpdateViewModel = hiltViewModel()) {
 
+    val ctx = LocalContext.current
+
+    val builder = rememberBalloonBuilder {
+        setArrowSize(10)
+        setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+        setArrowPosition(0.5f)
+        setHeight(BalloonSizeSpec.WRAP)
+        setPadding(12)
+        setCornerRadius(8f)
+        setIsVisibleOverlay(true)
+        setDismissWhenClicked(true)
+    }
+
+    var multifiles : MutableList<MultipartBody.Part> = remember {
+        mutableStateListOf()
+    }
     var inputext by remember {
         mutableStateOf("")
     }
@@ -49,7 +70,9 @@ fun ToxScreen( imageUpdateViewModel: ImageUpdateViewModel = hiltViewModel()) {
     var selectedImage by remember {
         mutableStateOf<Uri?>(null)
     }
-    val ctx = LocalContext.current
+
+
+
 
     val stateUpdateImage = imageUpdateViewModel._getUserStateFlow.collectAsState()
 
@@ -104,7 +127,7 @@ Column(modifier = Modifier
                .border(
                    BorderStroke(
                        width = 0.dp,
-                       color = Color.Black
+                       color = Color.Transparent
                    ),
                ),
            colors = TextFieldDefaults.textFieldColors(
@@ -138,20 +161,19 @@ Column(modifier = Modifier
     }
 
 
-    Row(modifier = Modifier
-        .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically) {
 
 
-        Column() {
-            Text("# Add Hashtag",style = TextStyle(color = cgreenlight, fontSize = 20.sp))
-            Row() {
+
+        Column {
+            Divider(modifier = Modifier.padding(bottom = 4.dp))
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+               verticalAlignment = Alignment.CenterVertically
+                ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_outline_add_photo_alternate_24),
+                    painter = painterResource(id = R.drawable.cimage),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(48.dp)
                         .padding(start = 8.dp)
                         .clickable {
                             launcher.launch("image/*")
@@ -159,98 +181,156 @@ Column(modifier = Modifier
                     tint = chonolulublue
                 )
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_round_videocam_24),
+                    painter = painterResource(id = R.drawable.cvideo),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(48.dp)
                         .padding(start = 8.dp),
                     tint = chonolulublue
                 )
+
+
+                Balloon(builder = builder,
+                    balloonContent = {
+                       Row(modifier = Modifier.width(108.dp),
+                           horizontalArrangement = Arrangement.SpaceBetween
+                       ) {
+                           Text(
+                               modifier = Modifier.clickable {
+                                   inputext += "****"
+                               },
+                               text ="B", color = cwhite,
+                               style = TextStyle(fontWeight = FontWeight.Bold)
+                           )
+                           Text(
+                               modifier = Modifier.clickable {
+                                   inputext += "**"
+                               },
+                               text ="I", color = cwhite,
+                               style = TextStyle(fontStyle = FontStyle.Italic))
+                           Text(
+                               modifier = Modifier.clickable {
+                                   inputext += "<u></u>"
+                               },
+                               text ="U", color = cwhite,
+                               style = TextStyle(fontWeight = FontWeight.Bold,
+                                   textDecoration=TextDecoration.Underline
+                               )
+                           )
+
+                       }
+                    }
+                    ) {it->
+                    Icon(
+                        painter = painterResource(id = R.drawable.cfont),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .clickable {
+
+                                it.showAlignTop()
+
+                            },
+                        tint = chonolulublue
+                    )
+
+                }
+
+
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_outline_bar_chart_24),
+                    painter = painterResource(id = R.drawable.cpoll),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(48.dp)
-                        .padding(start = 8.dp),
+                        .padding(start = 8.dp)
+                        .clickable {
+
+                        },
                     tint = chonolulublue
                 )
+
+
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_outline_text_fields_24),
+                    painter = painterResource(id = R.drawable.csend),
                     contentDescription = null,
+                    tint = chonolulublue,
                     modifier = Modifier
-                        .size(48.dp)
-                        .padding(start = 8.dp),
-                    tint = chonolulublue
+                        .padding(start = 8.dp)
+                        .clickable {
+                            //ImageUpdate
+
+                            val path: File = Environment.getExternalStoragePublicDirectory(
+                                Environment.DIRECTORY_PICTURES
+                            )
+
+                            val name = getRandomString(16)
+                            Log.e("1111", name)
+                            val files = File(path, "$name.jpg")
+
+
+                            try {
+                                if (!path.isDirectory()) {
+                                    path.mkdirs()
+                                }
+                                files.createNewFile()
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                            Log.e("2222", files.toString())
+                            files
+                                .outputStream()
+                                .use {
+                                    ctx.contentResolver
+                                        .openInputStream(selectedImage!!)
+                                        ?.copyTo(it)
+                                }
+
+                            Log.d("2222", files.toString())
+                            ///
+                            val requestFile = files.asRequestBody("image/*".toMediaTypeOrNull())
+                            val file =
+                                MultipartBody.Part.createFormData("file", files.name, requestFile)
+
+
+                            multifiles.add(file)
+
+
+
+                            val myAddress =
+                                "0x5Ac32b12daF2D5942403D3fc97f168Fa485C795C".toRequestBody("text/plain".toMediaTypeOrNull())
+                            val privateKey =
+                                "6a9cdaafc795b70dd6e700502de3d37d7dd77c1fb76198eff77a270d1c412a77".toRequestBody(
+                                    "text/plain".toMediaTypeOrNull()
+                                )
+
+                            val type =
+                                "3".toRequestBody("text/plain".toMediaTypeOrNull())
+                            val _hashtag =
+                                "#cryptoxin".toRequestBody("text/plain".toMediaTypeOrNull())
+                            val _content =
+                                inputext.toRequestBody("text/plain".toMediaTypeOrNull())
+                            val videoHash =
+                                "0".toRequestBody("text/plain".toMediaTypeOrNull())
+
+
+                            imageUpdateViewModel.getImageUpdateCall(
+                                multifiles,
+                                myAddress,
+                                privateKey,
+                                type,
+                                _content,
+                                _hashtag,
+                                videoHash
+                            )
+
+                            Log.e("1111", stateUpdateImage.value.toString())
+
+                        },
                 )
 
 
             }
+
+
         }
-        Icon(
-            painter = painterResource(id = R.drawable.ic_baseline_send_24),
-            contentDescription = null,
-            tint = chonolulublue,
-            modifier = Modifier
-                .size(48.dp)
-                .padding(start = 8.dp).clickable{
-                //ImageUpdate
-
-                val path: File = Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_PICTURES
-                )
-
-                    val name= getRandomString(16)
-                    Log.e("1111",name)
-                val files = File(path, "$name.jpg")
-
-
-                try {
-                    if (!path.isDirectory()) {
-                        path.mkdirs()
-                    }
-                    files.createNewFile()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-                    Log.e("2222",files.toString())
-                files.outputStream().use {
-            ctx.contentResolver.openInputStream(selectedImage!!)?.copyTo(it)
-                }
-
-                    Log.d("2222",files.toString())
-                ///
-                val requestFile = files.asRequestBody("image/*".toMediaTypeOrNull())
-                val file = MultipartBody.Part.createFormData("file", files.name, requestFile)
-
-                val myAddress =
-                    "0x5Ac32b12daF2D5942403D3fc97f168Fa485C795C".toRequestBody("text/plain".toMediaTypeOrNull())
-                val privateKey ="6a9cdaafc795b70dd6e700502de3d37d7dd77c1fb76198eff77a270d1c412a77".toRequestBody("text/plain".toMediaTypeOrNull())
-
-                val type =
-                    "3".toRequestBody("text/plain".toMediaTypeOrNull())
-                val _hashtag =
-                    "1dsd".toRequestBody("text/plain".toMediaTypeOrNull())
-                val _content =
-                    "165".toRequestBody("text/plain".toMediaTypeOrNull())
-
-
-                imageUpdateViewModel.getImageUpdateCall(
-                    file,
-                    myAddress,
-                    privateKey,
-                    type,
-                    _content,
-                    _hashtag
-                )
-
-                Log.e("1111",stateUpdateImage.value.toString())
-
-            },
-        )
-
-    }
-
-
 
 
 }
@@ -258,7 +338,6 @@ Column(modifier = Modifier
 
 
 }
-
 
 
 fun getRandomString(length: Int) : String {

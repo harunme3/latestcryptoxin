@@ -13,11 +13,13 @@ import javax.inject.Inject
 class ImageUpdateRepo @Inject
 constructor(private val imageUpdateInterface: ImageUpdateInterface) {
 
-    fun getImageUpdateRepo(file: MultipartBody.Part, myAddress: RequestBody,
+    fun getImageUpdateRepo(file: List<MultipartBody.Part>, myAddress: RequestBody,
                            privateKey:RequestBody,
                            type:RequestBody,
                            _content:RequestBody,
-                           _hashtag:RequestBody) = flow {
+                           _hashtag:RequestBody,
+                           videoHash:RequestBody
+                           ) = flow {
         try {
             emit(Resource.Loading())
             val apiResponse = imageUpdateInterface.getImageUpdate(
@@ -26,7 +28,8 @@ constructor(private val imageUpdateInterface: ImageUpdateInterface) {
                 privateKey = privateKey,
                 type = type,
                 _content=_content,
-                _hashtag=_hashtag
+                _hashtag=_hashtag,
+                videoHash=videoHash,
             )
             Log.e("1111",apiResponse.toString())
             if (apiResponse.isSuccessful) {

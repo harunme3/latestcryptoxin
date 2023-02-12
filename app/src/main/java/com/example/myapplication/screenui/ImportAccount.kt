@@ -36,12 +36,13 @@ import com.example.myapplication.uistate.ImportWalletState
 import com.example.myapplication.viewmodels.CreateWalletViewModels
 import com.example.myapplication.viewmodels.GetUserViewModel
 import com.example.myapplication.viewmodels.ImportWalletViewModel
+import com.example.myapplication.viewmodels.WalletVM
 
 @Composable
 fun ImportAccount(navController: NavController,
                   importAccountModel: ImportWalletViewModel = hiltViewModel(),
                   getUserViewModel: GetUserViewModel= hiltViewModel(),
-                  createWalletViewModels: CreateWalletViewModels = hiltViewModel()
+               walletVM: WalletVM = hiltViewModel()
                  ){
     val state = importAccountModel._importWalletStateFlow.collectAsState()
     val stateGetUser = getUserViewModel._getUserStateFlow.collectAsState()
@@ -76,12 +77,12 @@ fun ImportAccount(navController: NavController,
                     {
 
                         val customMnemonic="customMnemonic"
-                        createWalletViewModels.createWallet(WalletEntity(null,mnemonicPhrase=customMnemonic,privateKey=data.privateKey,address=data.address))
+                        walletVM.createWallet(WalletEntity(null,mnemonicPhrase=customMnemonic,privateKey=data.privateKey,address=data.address))
 //                        navController.navigate(Graph.DASHBOARD)
                     }
                     else
                     {
-                        createWalletViewModels.createWallet(WalletEntity(null,mnemonicPhrase=inputText,privateKey=data.privateKey,address=data.address))
+                        walletVM.createWallet(WalletEntity(null,mnemonicPhrase=inputText,privateKey=data.privateKey,address=data.address))
 
 //                        navController.navigate(Graph.DASHBOARD)
                     }

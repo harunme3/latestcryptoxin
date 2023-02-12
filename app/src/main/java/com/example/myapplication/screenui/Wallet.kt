@@ -6,40 +6,89 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.typography
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.example.myapplication.data.datasource.roomdata.WalletEntity
+import com.example.myapplication.navigation.Screens
 import com.example.myapplication.ui.theme.cgraystronglight
+import com.example.myapplication.ui.theme.chonolulublue
 import com.example.myapplication.ui.theme.cwhite
+import com.example.myapplication.ui.theme.cyellow
+import com.example.myapplication.uistate.WalletS
+import com.example.myapplication.viewmodels.WalletVM
 
 @Composable
-fun WalletScreen(){
-    LazyColumn(){
-        item {
-            (1..50).forEach {
-               WalletCard1()
+fun WalletScreen(navController: NavController,walletVM: WalletVM = hiltViewModel(),){
+
+
+    val state = walletVM._getAllWalletStateFlow.collectAsState()
+
+    when (state.value) {
+        is WalletS.Empty -> {
+            Column (modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally){
+                CircularProgressIndicator(
+                    modifier = Modifier.then(Modifier.size(32.dp)),
+                    color = cyellow
+
+                )
             }
         }
+        is WalletS.Loading -> {
+            Column (modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally){
+                CircularProgressIndicator(
+                    modifier = Modifier.then(Modifier.size(64.dp)),
+                    color = chonolulublue
+                )
+            }
+        }
+        is WalletS.Error -> Text(text = "error")
+        is WalletS.Loaded -> {
+            val context= LocalContext.current
+            val clipboardManager: ClipboardManager = LocalClipboardManager.current
+            val data=(state.value as WalletS.Loaded).data
+
+
+            LazyColumn(){
+                item {
+                    data.forEachIndexed { index, it ->
+                        WalletCard(it,navController,walletVM)
+                    }
+                }
+            }
+
+
+        }
+
+
     }
+
 }
 
 
 
 
 @Composable
-fun WalletCard1() {
+fun WalletCard(walletEntity: WalletEntity , navController: NavController , walletVM: WalletVM) {
+
     Card(
         modifier = Modifier
             .fillMaxWidth().
@@ -47,7 +96,7 @@ fun WalletCard1() {
             .padding(8.dp)
             .clip(RoundedCornerShape(16.dp))
             .clickable(onClick = {
-                //Navigate to profile
+                navController.navigate(Screens.WalletDashboardScreen.route)
             }),
         elevation = 0.dp,
         backgroundColor = cgraystronglight
@@ -60,23 +109,20 @@ fun WalletCard1() {
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-
                 Image(
                     modifier = Modifier
                         .size(60.dp)
                         .clip(CircleShape),
-                    painter = painterResource(id =com.example.myapplication.R.drawable.dummyprofilephoto),
+                    painter = painterResource(id =com.example.myapplication.R.drawable.cdarklogo),
                     alignment = Alignment.CenterStart,
                     contentDescription = "",
                     contentScale = ContentScale.Crop
                 )
 
                 Column( Modifier
-
                     .weight(1f)) {
                     Text(
-                        text = "Praveen",
-
+                        text =walletEntity.walletId.toString(),
                         color = MaterialTheme.colors.surface,
                         fontWeight = FontWeight.Bold,
                         style = typography.subtitle1
@@ -84,36 +130,11 @@ fun WalletCard1() {
                     Spacer(modifier = Modifier.height(2.dp))
 
                     Text(
-                        text = buildString {
-                            append("@prvks")
-                            append("yrs | ")
-                            append("male")
-                        },
+                        text =walletEntity.address,
                         modifier = Modifier.padding(0.dp, 0.dp, 12.dp, 0.dp),
                         color = cwhite,
                         style = typography.caption
                     )
-
-                    Row(verticalAlignment = Alignment.Bottom) {
-
-                        val location: Painter =
-                            painterResource(id = com.example.myapplication.R.drawable.home)
-
-                        Icon(
-                            painter = location,
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp, 16.dp),
-                            tint = Color.Red
-                        )
-
-                        Text(
-                            text = "Entrepreneur",
-                            modifier = Modifier.padding(8.dp, 12.dp, 12.dp, 0.dp),
-                            color = MaterialTheme.colors.surface,
-                            style = typography.caption
-
-                        )
-                    }
                 }
 
 
