@@ -43,10 +43,8 @@ fun CreateAccount(navController: NavController, createWalletViewModels: CreateWa
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally){
                 CircularProgressIndicator(
-
                     modifier = Modifier.then(Modifier.size(32.dp)),
                     color = cyellow
-
                 )
             }
         }

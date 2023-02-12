@@ -29,6 +29,8 @@ import com.example.myapplication.navigation.Graph
 import com.example.myapplication.navigation.Screens
 import com.example.myapplication.ui.theme.RainbowColors
 import com.example.myapplication.ui.theme.cwhite
+import com.example.myapplication.uistate.CreateWalletState
+import com.example.myapplication.uistate.WalletS
 import com.example.myapplication.viewmodels.CreateWalletViewModels
 import com.example.myapplication.viewmodels.WalletVM
 import kotlinx.coroutines.delay
@@ -36,24 +38,27 @@ import kotlinx.coroutines.delay
 @OptIn(ExperimentalTextApi::class)
 @Composable
 fun SplashScreen(navController: NavHostController,walletVM: WalletVM = hiltViewModel()) {
-    val configuration = LocalConfiguration.current
+    val state = walletVM._getAllWalletStateFlow.collectAsState()
 
-    LaunchedEffect(key1 = true) {
+    if (state.value is WalletS.Loaded){
+        LaunchedEffect(key1 = true) {
 
-        delay(10)
+            delay(10)
 
+            if ((state.value as WalletS.Loaded).data.isEmpty()) {
+                navController.popBackStack()
+                navController.navigate(Screens.CreateImport.route)
+            } else {
+                navController.popBackStack()
+      //navController.navigate(Graph.DASHBOARD)
+         navController.navigate(Screens.CreateImport.route)
 
-       //Write condition have account or not
-
-        if (false) {
-            navController.popBackStack()
-            navController.navigate(Screens.CreateImport.route)
-        } else {
-            navController.popBackStack()
-            navController.navigate(Graph.DASHBOARD)
-
+            }
         }
     }
+
+
+
 
 
 

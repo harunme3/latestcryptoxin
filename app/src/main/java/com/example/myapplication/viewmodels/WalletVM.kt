@@ -30,7 +30,6 @@ class WalletVM  @Inject constructor (private val walletR: WalletR): ViewModel() 
 
 init {
     getAllWallet()
-    getWallet(1)
 }
 
      fun getAllWallet() {
@@ -61,7 +60,6 @@ init {
                 getWalletStateFlow.value= WalletIdS.Error(message = "Exception $e")
             }.collect {
                 val getWalletData=it
-                Log.d("1111",it.toString())
                 getWalletStateFlow.value= WalletIdS.Loaded(data =getWalletData)
 
             }

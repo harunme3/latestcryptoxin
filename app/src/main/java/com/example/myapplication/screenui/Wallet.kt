@@ -1,6 +1,7 @@
 package com.example.myapplication.screenui
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,7 +9,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.typography
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.myapplication.data.datasource.roomdata.WalletEntity
@@ -67,12 +72,35 @@ fun WalletScreen(navController: NavController,walletVM: WalletVM = hiltViewModel
             val data=(state.value as WalletS.Loaded).data
 
 
-            LazyColumn(){
-                item {
-                    data.forEachIndexed { index, it ->
-                        WalletCard(it,navController,walletVM)
+            Box(
+            ) {
+                LazyColumn(){
+                    item {
+                        data.forEachIndexed { index, walletEntity ->
+                            WalletCard(walletEntity,navController,walletVM)
+                        }
                     }
                 }
+
+              ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+                  val floatingActionButton=createRef()
+                  FloatingActionButton(
+                      modifier=Modifier.padding(bottom = 64.dp, end = 8.dp).constrainAs(floatingActionButton){
+                          end.linkTo(parent.end)
+                         bottom.linkTo(parent.bottom)
+
+
+                      },
+                      backgroundColor = chonolulublue,
+                      onClick = { /*TODO*/ },
+                  ) {
+                      Icon(
+                          imageVector = Icons.Rounded.Add,
+                          contentDescription = "Add FAB",
+                          tint = Color.White,
+                      )
+                  }
+              }
             }
 
 
@@ -87,16 +115,16 @@ fun WalletScreen(navController: NavController,walletVM: WalletVM = hiltViewModel
 
 
 @Composable
-fun WalletCard(walletEntity: WalletEntity , navController: NavController , walletVM: WalletVM) {
+fun WalletCard( walletEntity: WalletEntity , navController: NavController , walletVM: WalletVM) {
 
     Card(
         modifier = Modifier
-            .fillMaxWidth().
-              height(100.dp)
+            .fillMaxWidth()
+            .height(100.dp)
             .padding(8.dp)
             .clip(RoundedCornerShape(16.dp))
             .clickable(onClick = {
-                navController.navigate(Screens.WalletDashboardScreen.route)
+                navController.navigate(Screens.WalletDashboardScreen.route + "/${walletEntity.walletId}")
             }),
         elevation = 0.dp,
         backgroundColor = cgraystronglight
@@ -104,7 +132,7 @@ fun WalletCard(walletEntity: WalletEntity , navController: NavController , walle
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal =  8.dp),
+                .padding(horizontal = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {

@@ -1,17 +1,16 @@
 package com.example.myapplication.screenui.walletui
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,18 +22,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.myapplication.R
-import com.example.myapplication.screenui.WalletCard
+import com.example.myapplication.data.datasource.roomdata.WalletEntity
 import com.example.myapplication.ui.theme.chonolulublue
 import com.example.myapplication.ui.theme.cwhite
 import com.example.myapplication.ui.theme.cyellow
 import com.example.myapplication.uistate.WalletIdS
-import com.example.myapplication.uistate.WalletS
 import com.example.myapplication.viewmodels.WalletVM
 
 @Composable
-fun WalletDashboard(walletVM: WalletVM = hiltViewModel(),) {
-
+fun WalletDashboard(navController: NavController,walletId:Int, walletVM: WalletVM = hiltViewModel() ,) {
+    LaunchedEffect(Unit){
+        walletVM.getWallet(walletId = walletId)
+    }
     val state = walletVM._getWalletStateFlow.collectAsState()
     when (state.value) {
         is WalletIdS.Empty -> {
@@ -63,31 +64,18 @@ fun WalletDashboard(walletVM: WalletVM = hiltViewModel(),) {
             val context= LocalContext.current
             val clipboardManager: ClipboardManager = LocalClipboardManager.current
             val data=(state.value as WalletIdS.Loaded).data
-            WalletDashboardComponent()
+            WalletDashboardComponent(data)
 
         }
 
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 
 @Composable
-fun WalletDashboardComponent(){
+fun WalletDashboardComponent(data: WalletEntity) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -138,7 +126,7 @@ fun WalletDashboardComponent(){
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Row() {
-                            Text(text = "0x4......7129")
+                            Text(text = data.address.substring(0,10))
                             Image(
                                 painter = painterResource(id = R.drawable.ic_baseline_content_copy_24) ,
                                 contentDescription = null ,
