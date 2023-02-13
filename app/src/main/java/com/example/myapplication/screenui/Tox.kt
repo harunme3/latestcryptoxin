@@ -34,6 +34,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.R
 import com.example.myapplication.ui.theme.*
 import com.example.myapplication.viewmodels.ImageUpdateViewModel
+import com.example.myapplication.viewmodels.WalletVM
 import com.skydoves.balloon.*
 import com.skydoves.balloon.compose.Balloon
 import com.skydoves.balloon.compose.rememberBalloonBuilder
@@ -45,7 +46,7 @@ import java.io.File
 
 
 @Composable
-fun ToxScreen( imageUpdateViewModel: ImageUpdateViewModel = hiltViewModel()) {
+fun ToxScreen(imageUpdateViewModel: ImageUpdateViewModel = hiltViewModel() , walletVM: WalletVM = hiltViewModel() ,) {
 
     val ctx = LocalContext.current
 

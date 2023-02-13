@@ -1,4 +1,4 @@
-package com.example.myapplication.screenui
+package com.example.myapplication.screenui.createImport
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -38,10 +38,12 @@ import com.example.myapplication.viewmodels.GetUserViewModel
 import com.example.myapplication.viewmodels.ImportWalletViewModel
 
 @Composable
-fun MandatoryDetails(navController: NavController,
-                  importAccountModel: ImportWalletViewModel = hiltViewModel(),
-                  getUserViewModel: GetUserViewModel= hiltViewModel(),
-                  createWalletViewModels: CreateWalletViewModels = hiltViewModel()
+fun MandatoryDetails(
+    navController: NavController,
+     mnemonic: String,
+    privateKey: String,
+    address: String,
+    referralCode: String,
 ){
     val context=LocalContext.current
     val clipboardManager: ClipboardManager = LocalClipboardManager.current

@@ -18,6 +18,7 @@ constructor(private val getUserApiInterface: GetUserApiInterface) {
         try {
             emit(Resource.Loading())
             val apiResponse = getUserApiInterface.getUserInterface(getUserModelBody)
+            Log.e("1111",apiResponse.toString())
             if (apiResponse.isSuccessful) {
 
                 val result = apiResponse.body()

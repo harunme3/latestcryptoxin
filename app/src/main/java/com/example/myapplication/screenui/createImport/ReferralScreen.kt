@@ -1,4 +1,4 @@
-package com.example.myapplication.screenui
+package com.example.myapplication.screenui.createImport
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -153,7 +153,6 @@ fun ReferralScreen(navController: NavController,
                 style = TextStyle(
                     color = cwhite,
                     fontSize = 18.sp
-
                 ),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)

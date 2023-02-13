@@ -42,15 +42,13 @@ fun SplashScreen(navController: NavHostController,walletVM: WalletVM = hiltViewM
                 navController.popBackStack()
                 navController.navigate(Screens.CreateImport.route)
             } else {
-                navController.popBackStack()
-              navController.navigate(Graph.DASHBOARD)
+               // navController.popBackStack()
+
+                navController.navigate(Screens.CreateImport.route)
 
             }
         }
     }
-
-
-
 
 
 
