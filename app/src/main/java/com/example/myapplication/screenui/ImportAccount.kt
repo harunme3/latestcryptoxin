@@ -34,12 +34,9 @@ import com.example.myapplication.ui.theme.chonolulublue
 import com.example.myapplication.ui.theme.cwhite
 import com.example.myapplication.uistate.GetUserState
 import com.example.myapplication.uistate.ImportWalletState
-import com.example.myapplication.viewmodels.CreateWalletViewModels
 import com.example.myapplication.viewmodels.GetUserViewModel
 import com.example.myapplication.viewmodels.ImportWalletViewModel
 import com.example.myapplication.viewmodels.WalletVM
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
 
 @Composable
 fun ImportAccount(navController: NavController,
@@ -88,14 +85,12 @@ fun ImportAccount(navController: NavController,
 
              if(getUserData.data)
              {
-                 navController.navigate(Screens.DashBoard.route)
 
                  if (inputText.length==64)
                  {
-
                      val customMnemonic="customMnemonic"
                      walletVM.createWallet(WalletEntity(null,mnemonicPhrase=customMnemonic,privateKey=data.privateKey,address=data.address))
-                   navController.navigate(Graph.DASHBOARD)
+                       navController.navigate(Graph.DASHBOARD)
                  }
                  else
                  {
@@ -204,7 +199,6 @@ fun ImportAccount(navController: NavController,
                             .importWalletCall(
                                 privateKey = inputText,
                                 mnemonic = "")
-
                 }
                 else
                 {

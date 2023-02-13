@@ -1,15 +1,15 @@
 package com.example.myapplication.screenui.createImport
 
 import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,32 +19,31 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.myapplication.data.bodymodel.ProfileUpdateB
 import com.example.myapplication.data.datasource.roomdata.WalletEntity
 import com.example.myapplication.navigation.Graph
 import com.example.myapplication.navigation.Screens
-import com.example.myapplication.ui.theme.cblack
-import com.example.myapplication.ui.theme.cgraylight
 import com.example.myapplication.ui.theme.chonolulublue
 import com.example.myapplication.ui.theme.cwhite
-import com.example.myapplication.uistate.GetUserState
-import com.example.myapplication.uistate.ImportWalletState
-import com.example.myapplication.viewmodels.CreateWalletViewModels
-import com.example.myapplication.viewmodels.GetUserViewModel
-import com.example.myapplication.viewmodels.ImportWalletViewModel
+import com.example.myapplication.uistate.ProfileUpdateS
+import com.example.myapplication.viewmodels.ProfileUpdateVM
+import com.example.myapplication.viewmodels.WalletVM
 
 @Composable
 fun MandatoryDetails(
-    navController: NavController,
+     navController: NavController,
      mnemonic: String,
-    privateKey: String,
-    address: String,
-    referralCode: String,
+     privateKey: String,
+     address: String,
+     referralCode: String,
+     profileUpdateVM: ProfileUpdateVM= hiltViewModel(),
+     walletVM: WalletVM = hiltViewModel()
 ){
+    val state = profileUpdateVM._setProfileUpdateStateFlow.collectAsState()
     val context=LocalContext.current
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
 
@@ -57,6 +56,17 @@ fun MandatoryDetails(
     }
 
 
+    Log.e("1111",state.value.toString())
+
+    if (state.value is ProfileUpdateS.Loaded){
+        LaunchedEffect(key1 ="key1"){
+           walletVM.createWallet(WalletEntity(null,mnemonicPhrase=mnemonic,privateKey=privateKey,address=address))
+        navController.navigate(Graph.DASHBOARD)
+        }
+
+    }
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -66,11 +76,11 @@ fun MandatoryDetails(
     ) {
 
 
-        BasicTextField(value = name, onValueChange = {
+       TextField(value = name, onValueChange = {
             name = it
         })
 
-        BasicTextField(value = username, onValueChange = {
+       TextField(value = username, onValueChange = {
             username = it
         })
 
@@ -78,18 +88,27 @@ fun MandatoryDetails(
 
         Button(
             onClick = {
-
-
+                profileUpdateVM.setProfileUpdate(profileUpdateB = ProfileUpdateB(
+                    myAddress = address ,
+                    privateKey = privateKey ,
+                    Name = name,
+                    UserName = username ,
+                    Organization = "" ,
+                    designation = "" ,
+                    Dob = "" ,
+                    ProfileTag = "" ,
+                    MailID = "" ,
+                    Otherdetail = ""
+                ))
 
 
             },
             modifier = Modifier
                 .padding(30.dp)
-                .clip(RoundedCornerShape(topEnd = 36.dp, bottomStart = 36.dp,)),
+                .clip(RoundedCornerShape(topEnd = 36.dp , bottomStart = 36.dp ,)),
             colors = ButtonDefaults.buttonColors(backgroundColor = chonolulublue)
         )
         {
-
 
             Text(text = "Next",
                 style = TextStyle(

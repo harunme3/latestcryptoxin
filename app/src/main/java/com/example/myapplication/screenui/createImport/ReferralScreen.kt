@@ -1,5 +1,6 @@
 package com.example.myapplication.screenui.createImport
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -33,10 +34,13 @@ import com.example.myapplication.viewmodels.RegisterViewModel
 import com.example.myapplication.viewmodels.WalletVM
 
 @Composable
-fun ReferralScreen(navController: NavController,
-                   mnemonic: String, privateKey: String, address: String,
-                   registerViewModel: RegisterViewModel = hiltViewModel(),
-                  walletVM: WalletVM = hiltViewModel()
+fun ReferralScreen(
+    navController: NavController,
+     mnemonic: String,
+    privateKey: String,
+    address: String,
+    registerViewModel: RegisterViewModel = hiltViewModel(),
+    walletVM: WalletVM = hiltViewModel()
 ){
     val state = registerViewModel._registrationStateFlow.collectAsState()
     var inputTextReferral by remember {
@@ -44,11 +48,12 @@ fun ReferralScreen(navController: NavController,
     }
 
 
-
     if (state.value is RegisterState.Loaded){
+        LaunchedEffect(key1 ="key1"){
+            Log.e("1111",state.value.toString())
+            navController.navigate(Screens.MandatoryDetails.route+"/${mnemonic}/${privateKey}/${address}/${inputTextReferral}")
+        }
 
-        walletVM.createWallet(WalletEntity(null,mnemonicPhrase=mnemonic,privateKey=privateKey,address=address))
-        navController.navigate(Graph.DASHBOARD)
     }
 
 
@@ -67,12 +72,12 @@ fun ReferralScreen(navController: NavController,
             Box(modifier = Modifier
                 .padding(2.dp)
                 .clickable {
+                    inputTextReferral = "1"
                     registerViewModel.registrationCall(
-                        myAddress = address,
-                        privateKey = privateKey,
+                        myAddress = address ,
+                        privateKey = privateKey ,
                         referralCode = "1"
                     )
-
 
 
                 })
@@ -81,10 +86,10 @@ fun ReferralScreen(navController: NavController,
                     text = "skip",
                     modifier = Modifier
                         .background(
-                            color = cgraylight,
+                            color = cgraylight ,
                             shape = RoundedCornerShape(16.dp)
                         )
-                        .padding(vertical = 8.dp, horizontal = 16.dp),
+                        .padding(vertical = 8.dp , horizontal = 16.dp),
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1
                 )
@@ -92,7 +97,10 @@ fun ReferralScreen(navController: NavController,
         }
           Box() {
                 BasicTextField(
-                    modifier=Modifier.border(2.dp, cblack).height(50.dp).fillMaxWidth(),
+                    modifier= Modifier
+                        .border(2.dp , cblack)
+                        .height(50.dp)
+                        .fillMaxWidth(),
                     value = inputTextReferral,
                     onValueChange ={
                         inputTextReferral=it
@@ -112,53 +120,21 @@ fun ReferralScreen(navController: NavController,
         },
         modifier = Modifier
             .padding(30.dp)
-            .clip(RoundedCornerShape(topEnd = 36.dp, bottomStart = 36.dp,)),
+            .clip(RoundedCornerShape(topEnd = 36.dp , bottomStart = 36.dp ,)),
         colors = ButtonDefaults.buttonColors(backgroundColor = chonolulublue)
     )
     {
 
+        Text(text = "Submit",
+            style = TextStyle(
+                color = cwhite,
+                fontSize = 18.sp
 
-        if(state.value is RegisterState.Empty)
-        {
-            Text(text = "Submit",
-                style = TextStyle(
-                    color = cwhite,
-                    fontSize = 18.sp
+            ),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)
+        )
 
-                ),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)
-            )
-        }
-
-
-        if (state.value is RegisterState.Loading){
-
-            Text(text = "Please Wait",
-                style = TextStyle(
-                    color = cwhite,
-                    fontSize = 18.sp
-
-                ),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)
-            )
-
-        }
-
-
-        if (state.value is RegisterState.Error){
-
-            Text(text = "Submit",
-                style = TextStyle(
-                    color = cwhite,
-                    fontSize = 18.sp
-                ),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)
-            )
-
-        }
 
 
     }

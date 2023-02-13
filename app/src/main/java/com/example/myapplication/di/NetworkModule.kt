@@ -75,5 +75,10 @@ class NetworkModule {
         return  retrofitBuilder.client(okHttpClient).build().create(AllPostI::class.java)
     }
 
+    @Singleton
+    @Provides
+    fun provideProfileUpdate(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient): ProfileUpdateI {
+        return  retrofitBuilder.client(okHttpClient).build().create(ProfileUpdateI::class.java)
+    }
 
 }

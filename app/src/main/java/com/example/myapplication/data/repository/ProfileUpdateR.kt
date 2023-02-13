@@ -1,21 +1,18 @@
 package com.example.myapplication.data.repository
 
-import android.util.Log
 import com.example.myapplication.common.Resource
-import com.example.myapplication.data.bodymodel.ImportAccountBody
-import com.example.myapplication.data.datasource.remotedata.ImportWalletApiInterface
+import com.example.myapplication.data.bodymodel.ProfileUpdateB
+import com.example.myapplication.data.datasource.remotedata.ProfileUpdateI
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 
-class ImportWalletRepo @Inject
-constructor(private val importWalletApiInterface: ImportWalletApiInterface) {
-
-    fun getImportWalletRepo(importAccountBody: ImportAccountBody) = flow {
+class ProfileUpdateR @Inject
+constructor(private val profileUpdateI: ProfileUpdateI) {
+    fun setProfileUpdateR(profileUpdateB: ProfileUpdateB) = flow {
         try {
             emit(Resource.Loading())
-            val apiResponse = importWalletApiInterface.importWalletInterface(importAccountBody)
-Log.e("1111",apiResponse.toString())
+            val apiResponse = profileUpdateI.setProfileUpdateI(profileUpdateB)
             if (apiResponse.isSuccessful) {
 
                 val result = apiResponse.body()

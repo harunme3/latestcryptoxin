@@ -33,6 +33,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.R
 import com.example.myapplication.ui.theme.*
+import com.example.myapplication.uistate.WalletIdS
+import com.example.myapplication.uistate.WalletS
 import com.example.myapplication.viewmodels.ImageUpdateViewModel
 import com.example.myapplication.viewmodels.WalletVM
 import com.skydoves.balloon.*
@@ -47,6 +49,10 @@ import java.io.File
 
 @Composable
 fun ToxScreen(imageUpdateViewModel: ImageUpdateViewModel = hiltViewModel() , walletVM: WalletVM = hiltViewModel() ,) {
+
+
+    val walletState = walletVM._getAllWalletStateFlow.collectAsState()
+
 
     val ctx = LocalContext.current
 
@@ -289,40 +295,38 @@ Column(modifier = Modifier
                             val requestFile = files.asRequestBody("image/*".toMediaTypeOrNull())
                             val file =
                                 MultipartBody.Part.createFormData("file", files.name, requestFile)
-
-
                             multifiles.add(file)
+ if (walletState.value is WalletS.Loaded)
+     {
+            val data=(walletState.value as WalletS.Loaded).data
+            val myAddress =
+            data[0].address.toRequestBody("text/plain".toMediaTypeOrNull())
+            val privateKey =
+            data[0].privateKey.toRequestBody(
+            "text/plain".toMediaTypeOrNull()
+            )
 
 
-
-                            val myAddress =
-                                "0x5Ac32b12daF2D5942403D3fc97f168Fa485C795C".toRequestBody("text/plain".toMediaTypeOrNull())
-                            val privateKey =
-                                "6a9cdaafc795b70dd6e700502de3d37d7dd77c1fb76198eff77a270d1c412a77".toRequestBody(
-                                    "text/plain".toMediaTypeOrNull()
-                                )
-
-                            val type =
-                                "3".toRequestBody("text/plain".toMediaTypeOrNull())
-                            val _hashtag =
-                                "#cryptoxin".toRequestBody("text/plain".toMediaTypeOrNull())
-                            val _content =
-                                inputext.toRequestBody("text/plain".toMediaTypeOrNull())
-                            val videoHash =
-                                "0".toRequestBody("text/plain".toMediaTypeOrNull())
+            val type =
+            "3".toRequestBody("text/plain".toMediaTypeOrNull())
+            val _hashtag =
+            "#cryptoxin".toRequestBody("text/plain".toMediaTypeOrNull())
+            val _content =
+            inputext.toRequestBody("text/plain".toMediaTypeOrNull())
+            val videoHash =
+            "0".toRequestBody("text/plain".toMediaTypeOrNull())
 
 
-                            imageUpdateViewModel.getImageUpdateCall(
-                                multifiles,
-                                myAddress,
-                                privateKey,
-                                type,
-                                _content,
-                                _hashtag,
-                                videoHash
-                            )
-
-                            Log.e("1111", stateUpdateImage.value.toString())
+            imageUpdateViewModel.getImageUpdateCall(
+            multifiles,
+            myAddress,
+            privateKey,
+            type,
+            _content,
+            _hashtag,
+            videoHash
+            )
+    }
 
                         },
                 )
