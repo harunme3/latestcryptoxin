@@ -1,21 +1,17 @@
 package com.example.myapplication.screenui
 
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
@@ -24,14 +20,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.myapplication.data.datasource.roomdata.WalletEntity
 import com.example.myapplication.navigation.Graph
 import com.example.myapplication.navigation.Screens
 import com.example.myapplication.ui.theme.RainbowColors
 import com.example.myapplication.ui.theme.cwhite
-import com.example.myapplication.uistate.CreateWalletState
 import com.example.myapplication.uistate.WalletS
-import com.example.myapplication.viewmodels.CreateWalletViewModels
 import com.example.myapplication.viewmodels.WalletVM
 import kotlinx.coroutines.delay
 
@@ -50,8 +43,7 @@ fun SplashScreen(navController: NavHostController,walletVM: WalletVM = hiltViewM
                 navController.navigate(Screens.CreateImport.route)
             } else {
                 navController.popBackStack()
-      //navController.navigate(Graph.DASHBOARD)
-         navController.navigate(Screens.CreateImport.route)
+              navController.navigate(Graph.DASHBOARD)
 
             }
         }

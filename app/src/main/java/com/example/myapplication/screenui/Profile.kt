@@ -67,7 +67,7 @@ fun ProfileScreen(navController: NavController) {
                     start.linkTo(parent.start, 8.dp)
                     centerAround(image.bottom)
                 }
-                    .clip(CircleShape),
+                 .clip(CircleShape),
                 contentScale= ContentScale.Crop
             )
 

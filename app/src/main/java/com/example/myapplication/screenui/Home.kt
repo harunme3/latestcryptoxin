@@ -2,12 +2,14 @@ package com.example.myapplication.screenui
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,6 +25,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.R
+import com.example.myapplication.screenui.cTopAppBar.CTopAppBar
+import com.example.myapplication.screenui.cTopAppBar.CustomShape
+import com.example.myapplication.screenui.cTopAppBar.DrawerContent
 import com.example.myapplication.ui.theme.cblack
 import com.example.myapplication.ui.theme.cgraystrongest
 import com.example.myapplication.ui.theme.chonolulublue
@@ -30,14 +35,14 @@ import com.example.myapplication.ui.theme.cyellow
 import com.example.myapplication.uistate.AllPostS
 import com.example.myapplication.viewmodels.AllPostVM
 import com.halilibo.richtext.markdown.Markdown
-import com.halilibo.richtext.markdown.MarkdownParseOptions
-import com.halilibo.richtext.ui.HeadingStyle
 import com.halilibo.richtext.ui.RichText
-import com.halilibo.richtext.ui.RichTextScope
-import com.halilibo.richtext.ui.RichTextStyle
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(allPostVM: AllPostVM= hiltViewModel()) {
+    val scaffoldState = rememberScaffoldState()
+    val coroutineScope = rememberCoroutineScope()
 
     val state = allPostVM._getAllPostStateFlow.collectAsState()
     when (state.value) {
@@ -69,17 +74,38 @@ fun HomeScreen(allPostVM: AllPostVM= hiltViewModel()) {
             val data=(state.value as AllPostS.Loaded).data.data
 
 
-            LazyColumn(){
-                item {
-                    data.forEachIndexed { index, it ->
-                 AllPostCard(
-                     author = it.author,
-                     hashtag =it.hashtag ,
-                     content =it.content ,
-                     imgHash =it.imgHash ,
-                     timestamp =it.timestamp ,
-                     likeCount = it.likeCount
-                 )
+            Scaffold(  modifier = Modifier.fillMaxSize(),
+                scaffoldState = scaffoldState,
+                topBar = {
+                    CTopAppBar(title = "CryptoxIN", modifier = Modifier) {
+                        coroutineScope.launch {
+                            scaffoldState.drawerState.open()
+                        }
+                    }
+                },
+                drawerContent = {
+                    DrawerContent {
+                        coroutineScope.launch {
+                            // delay for the ripple effect
+                            delay(timeMillis = 250)
+                            scaffoldState.drawerState.close()
+                        }
+                    }
+                },
+                drawerShape = CustomShape(220.dp, 0f)
+                ) {
+                LazyColumn(modifier = Modifier.padding(it)) {
+                    item {
+                        data.forEachIndexed { index , it ->
+                            AllPostCard(
+                                author = it.author ,
+                                hashtag = it.hashtag ,
+                                content = it.content ,
+                                imgHash = it.imgHash ,
+                                timestamp = it.timestamp ,
+                                likeCount = it.likeCount
+                            )
+                        }
                     }
                 }
             }
