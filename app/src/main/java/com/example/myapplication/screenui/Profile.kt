@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,22 +25,128 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.myapplication.R
+import com.example.myapplication.data.models.nooffollower.NoOfFollowerM
+import com.example.myapplication.data.models.nooffollowing.NoOfFollowingM
+import com.example.myapplication.data.models.profilem.ProfileM
 import com.example.myapplication.navigation.Screens
 import com.example.myapplication.screenui.profilescreen.LikesTabScreen
 import com.example.myapplication.screenui.profilescreen.MediaTabScreen
 import com.example.myapplication.screenui.profilescreen.TweetsRepliesTabScreen
 import com.example.myapplication.screenui.profilescreen.TweetsTabScreen
 import com.example.myapplication.ui.theme.*
+import com.example.myapplication.uistate.NoOfFollowerS
+import com.example.myapplication.uistate.NoOfFollowingS
+import com.example.myapplication.uistate.ProfileS
+import com.example.myapplication.viewmodels.NoOfFollowerVM
+import com.example.myapplication.viewmodels.NoOfFollowingVM
+import com.example.myapplication.viewmodels.ProfileVM
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalPagerApi::class)
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(navController: NavController,profileVM: ProfileVM= hiltViewModel(),noOfFollowingVM: NoOfFollowingVM= hiltViewModel(),noOfFollowerVM: NoOfFollowerVM= hiltViewModel()) {
+    val state = profileVM._getProfileStateFlow.collectAsState()
+    val noOfFollowingState = noOfFollowingVM._getNoOfFollowingStateFlow.collectAsState()
+    val noOfFollowerState = noOfFollowerVM._getNoOfFollowerStateFlow.collectAsState()
 
+    when (state.value) {
+
+        is ProfileS.Loaded  -> {
+
+
+
+            when (noOfFollowingState.value) {
+
+                is NoOfFollowingS.Loaded  -> {
+
+
+
+                    when (noOfFollowerState.value) {
+
+                        is NoOfFollowerS.Loaded  -> {
+
+                            val profileData=(state.value as ProfileS.Loaded).data
+                            val noOfFollowingData=(noOfFollowingState.value as NoOfFollowingS.Loaded).data
+                            val noOfFollowerData=(noOfFollowerState.value as NoOfFollowerS.Loaded).data
+
+
+                            ProfileScreenComponent(navController,profileData,noOfFollowingData,noOfFollowerData)
+
+
+                        }
+                        else->{
+                            Column (modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally){
+                                CircularProgressIndicator(
+                                    modifier = Modifier.then(Modifier.size(32.dp)),
+                                    color = cyellow
+
+                                )
+                            }
+                        }
+
+
+                    }
+
+
+
+
+                }
+                else->{
+                    Column (modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally){
+                        CircularProgressIndicator(
+                            modifier = Modifier.then(Modifier.size(32.dp)),
+                            color = cyellow
+
+                        )
+                    }
+                }
+
+
+            }
+
+
+
+
+        }
+        else->{
+            Column (modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally){
+                CircularProgressIndicator(
+                    modifier = Modifier.then(Modifier.size(32.dp)),
+                    color = cyellow
+
+                )
+            }
+        }
+
+
+    }
+
+
+
+}
+
+
+
+
+@OptIn(ExperimentalLayoutApi::class , ExperimentalPagerApi::class)
+@Composable
+fun  ProfileScreenComponent(
+    navController: NavController ,
+    profileData: ProfileM ,
+    noOfFollowingData: NoOfFollowingM ,
+    noOfFollowerData: NoOfFollowerM
+){
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -67,7 +174,7 @@ fun ProfileScreen(navController: NavController) {
                     start.linkTo(parent.start, 8.dp)
                     centerAround(image.bottom)
                 }
-                 .clip(CircleShape),
+                    .clip(CircleShape),
                 contentScale= ContentScale.Crop
             )
 
@@ -118,11 +225,11 @@ fun ProfileScreen(navController: NavController) {
 
 //--------------------Name user id----------------------//
 
-        Text(text = "HR Ma'am",
+        Text(text =profileData.data.Name,
             color = cblack,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold)
-        Text(text = "@PRAVEEN9583", color = cgraylight, fontSize = 12.sp)
+        Text(text = profileData.data.UserName, color = cgraylight, fontSize = 12.sp)
 
 //--------------------Hash Tag----------------------//
         FlowRow(
@@ -131,7 +238,7 @@ fun ProfileScreen(navController: NavController) {
             (1..2).forEachIndexed  { index,it ->
                 Box(modifier = Modifier.padding(2.dp)) {
                     Text(
-                        text = "${index + 1} #Bitcoin Entrepreneur Co-Founder and COO",
+                        text = "${index + 1} ${profileData.data.designation}",
                         color= cgraystrong,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1
@@ -147,7 +254,7 @@ fun ProfileScreen(navController: NavController) {
             (1..3).forEachIndexed  { index,it ->
                 Box(modifier = Modifier.padding(2.dp)) {
                     Text(
-                        text = "${index + 1} NewDelhi,India",
+                        text = "${index + 1} ${profileData.data.Organization}",
                         color= cgraystrong,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1
@@ -160,7 +267,7 @@ fun ProfileScreen(navController: NavController) {
         Row() {
             Row() {
 
-                Text(text = "210",
+                Text(text = noOfFollowingData.data,
                     style = TextStyle(
                         color = cblack,
                         fontSize = 16.sp,
@@ -175,7 +282,7 @@ fun ProfileScreen(navController: NavController) {
             }
             Row(modifier = Modifier.padding(start = 10.dp)) {
 
-                Text(text = "2235",
+                Text(text = noOfFollowerData.data,
                     style = TextStyle(
                         color = cblack,
                         fontSize = 16.sp,
@@ -197,9 +304,14 @@ fun ProfileScreen(navController: NavController) {
 
 
     }
-
-
 }
+
+
+
+
+
+
+
 //TabLayout()
 
 

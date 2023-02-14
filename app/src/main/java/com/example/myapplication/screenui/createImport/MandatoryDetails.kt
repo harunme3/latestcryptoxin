@@ -98,7 +98,10 @@ fun MandatoryDetails(
                     Dob = "" ,
                     ProfileTag = "" ,
                     MailID = "" ,
-                    Otherdetail = ""
+                    Otherdetail = "" ,
+                    Profileimgg = "" ,
+                    backgroundimgg = "" ,
+
                 ))
 
 

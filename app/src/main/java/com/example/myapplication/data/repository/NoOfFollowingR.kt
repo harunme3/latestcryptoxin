@@ -1,25 +1,22 @@
 package com.example.myapplication.data.repository
 
-import android.util.Log
 import com.example.myapplication.common.Resource
-import com.example.myapplication.data.bodymodel.ImportAccountBody
-import com.example.myapplication.data.datasource.remotedata.ImportWalletApiInterface
+import com.example.myapplication.data.bodymodel.AddressPrivateKeyBody
+import com.example.myapplication.data.datasource.remotedata.NoOfFollowingI
+import com.example.myapplication.data.datasource.remotedata.ProfileI
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 
-class ImportWalletRepo @Inject
-constructor(private val importWalletApiInterface: ImportWalletApiInterface) {
+class NoOfFollowingR @Inject constructor(private val noOfFollowingI: NoOfFollowingI) {
 
-    fun getImportWalletRepo(importAccountBody: ImportAccountBody) = flow {
+    fun getNoOfFollowingR(addressPrivateKeyBody: AddressPrivateKeyBody) = flow {
         try {
             emit(Resource.Loading())
-            val apiResponse = importWalletApiInterface.importWalletInterface(importAccountBody)
-
+            val apiResponse = noOfFollowingI.getNoOfFollowingI(addressPrivateKeyBody)
             if (apiResponse.isSuccessful) {
 
                 val result = apiResponse.body()
-                Log.e("1112",result.toString())
                 emit(Resource.Success(result))
             } else {
                 emit(Resource.Error("Api is unsuccessful"))

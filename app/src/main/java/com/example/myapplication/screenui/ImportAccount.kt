@@ -65,7 +65,8 @@ fun ImportAccount(navController: NavController,
 
         LaunchedEffect(key1 = "key1" ){
              data=(state.value as ImportWalletState.Loaded).data
-            Log.d("1111", data.toString())
+            Log.v("1112", (state.value as ImportWalletState.Loaded).data.toString())
+            Log.e("1112", data.toString())
              getUserViewModel
                 .getUserCall(
                     myAddress = data.address,
@@ -75,8 +76,8 @@ fun ImportAccount(navController: NavController,
 
 
     }
-
- if(stateGetUser.value is GetUserState.Loaded)
+    Log.d("1111", stateGetUser.value.toString())
+    if(stateGetUser.value is GetUserState.Loaded)
      {
 
          LaunchedEffect(key1 = "key2" ){

@@ -12,4 +12,7 @@ data class ProfileUpdateB(
     val ProfileTag: String,
     val MailID: String,
     val Otherdetail: String,
+    val Profileimgg: String,
+    val backgroundimgg: String,
+
 )

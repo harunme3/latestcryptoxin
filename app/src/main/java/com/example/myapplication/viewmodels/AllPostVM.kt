@@ -13,10 +13,9 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class AllPostVM  @Inject constructor (private val allPostR: AllPostR): ViewModel()  {
+class AllPostVM @Inject constructor(private val allPostR: AllPostR) : ViewModel() {
 
-    private val getAllPostStateFlow: MutableStateFlow<AllPostS>
-            = MutableStateFlow(AllPostS.Empty)
+    private val getAllPostStateFlow: MutableStateFlow<AllPostS> = MutableStateFlow(AllPostS.Empty)
     val _getAllPostStateFlow: StateFlow<AllPostS> = getAllPostStateFlow
 
     init {
@@ -31,14 +30,13 @@ class AllPostVM  @Inject constructor (private val allPostR: AllPostR): ViewModel
             getAllPostStateFlow.value = AllPostS.Loading
 
             allPostR.getAllPostR(
-            ).catch { e->
-                getAllPostStateFlow.value= AllPostS.Error(message = "Exception $e")
+            ).catch { e ->
+                getAllPostStateFlow.value = AllPostS.Error(message = "Exception $e")
             }.collect {
-                if (it.data!=null)
-                {
+                if (it.data != null) {
 
-                    val getAllPostData=it.data
-                    getAllPostStateFlow.value= AllPostS.Loaded(data =getAllPostData)
+                    val getAllPostData = it.data
+                    getAllPostStateFlow.value = AllPostS.Loaded(data = getAllPostData)
                 }
             }
         }

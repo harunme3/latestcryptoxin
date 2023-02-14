@@ -81,4 +81,53 @@ class NetworkModule {
         return  retrofitBuilder.client(okHttpClient).build().create(ProfileUpdateI::class.java)
     }
 
+    @Singleton
+    @Provides
+    fun provideProfile(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient): ProfileI {
+        return  retrofitBuilder.client(okHttpClient).build().create(ProfileI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideNoOfFollowing(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient): NoOfFollowingI {
+        return  retrofitBuilder.client(okHttpClient).build().create(NoOfFollowingI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDirectReferralCount(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient): DirectReferralCountI {
+        return  retrofitBuilder.client(okHttpClient).build().create(DirectReferralCountI::class.java)
+    }
+    @Singleton
+    @Provides
+    fun provideTotalReferralCount(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient): TotalReferralCountI {
+        return  retrofitBuilder.client(okHttpClient).build().create(TotalReferralCountI::class.java)
+    }
+    @Singleton
+    @Provides
+    fun provideReferralReward(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient): ReferralRewardI {
+        return  retrofitBuilder.client(okHttpClient).build().create(ReferralRewardI::class.java)
+    }
+    @Singleton
+    @Provides
+    fun provideBonusReward(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient): BonusRewardI {
+        return  retrofitBuilder.client(okHttpClient).build().create(BonusRewardI::class.java)
+    }
+    @Singleton
+    @Provides
+    fun providePostReward(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):PostRewardI {
+        return  retrofitBuilder.client(okHttpClient).build().create(PostRewardI::class.java)
+    }
+    @Singleton
+    @Provides
+    fun provideLikeReward(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient): LikeRewardI {
+        return  retrofitBuilder.client(okHttpClient).build().create(LikeRewardI::class.java)
+    }
+    @Singleton
+    @Provides
+    fun provideCommentReward(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):CommentRewardI {
+        return  retrofitBuilder.client(okHttpClient).build().create(CommentRewardI::class.java)
+    }
+
+
 }
