@@ -17,4 +17,6 @@ sealed class Screens(val route:String){
     object ReferralPatternScreen:Screens("referralPattern_route")
     object MandatoryDetails:Screens("mandatoryDetails_route")
     object WalletDashboardScreen:Screens("walletDashboard_route")
+    object FollowerScreen:Screens("followerScreen_route")
+    object FollowingScreen:Screens("followingScreen_route")
 }

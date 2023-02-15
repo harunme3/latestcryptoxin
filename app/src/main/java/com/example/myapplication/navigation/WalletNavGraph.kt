@@ -4,6 +4,8 @@ import androidx.navigation.*
 import androidx.navigation.compose.composable
 import com.example.myapplication.screenui.VerifyAccount
 import com.example.myapplication.screenui.WalletScreen
+import com.example.myapplication.screenui.profilescreen.FollowerScreen
+import com.example.myapplication.screenui.profilescreen.FollowingScreen
 import com.example.myapplication.screenui.walletui.WalletDashboard
 
 
@@ -25,6 +27,15 @@ fun NavGraphBuilder.walletNavGraph(navController: NavHostController){
             val walletId=it.arguments?.getInt("walletId")
 
             WalletDashboard(navController, walletId = walletId!!)
+        }
+
+        composable(Screens.FollowerScreen.route){
+           FollowerScreen(navController)
+        }
+
+
+        composable(Screens.FollowingScreen.route){
+            FollowingScreen(navController)
         }
 
     }

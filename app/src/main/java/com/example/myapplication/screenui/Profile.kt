@@ -1,13 +1,10 @@
 package com.example.myapplication.screenui
 
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -264,8 +261,10 @@ fun  ProfileScreenComponent(
         }
 
 //--------------------follower and following----------------------//
-        Row() {
-            Row() {
+        Row(modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp)) {
+            Row(modifier = Modifier.clickable{
+                navController.navigate(Screens.FollowingScreen.route)
+            }) {
 
                 Text(text = noOfFollowingData.data,
                     style = TextStyle(
@@ -274,13 +273,18 @@ fun  ProfileScreenComponent(
                         fontWeight = FontWeight.Bold
 
                     ),)
-                Text(text = " Following",
+                Text(
+                    text = " Following",
                     style = TextStyle(
                         color = cgraystrongest,
                         fontSize = 16.sp
-                    ),)
+                    ),
+
+                )
             }
-            Row(modifier = Modifier.padding(start = 10.dp)) {
+            Row(modifier = Modifier.padding(start = 32.dp).clickable{
+                navController.navigate(Screens.FollowerScreen.route)
+            }) {
 
                 Text(text = noOfFollowerData.data,
                     style = TextStyle(
