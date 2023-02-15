@@ -95,6 +95,12 @@ class NetworkModule {
 
     @Singleton
     @Provides
+    fun provideNoOfFollower(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient): NoOfFollowerI {
+        return  retrofitBuilder.client(okHttpClient).build().create(NoOfFollowerI::class.java)
+    }
+
+    @Singleton
+    @Provides
     fun provideDirectReferralCount(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient): DirectReferralCountI {
         return  retrofitBuilder.client(okHttpClient).build().create(DirectReferralCountI::class.java)
     }
@@ -123,10 +129,80 @@ class NetworkModule {
     fun provideLikeReward(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient): LikeRewardI {
         return  retrofitBuilder.client(okHttpClient).build().create(LikeRewardI::class.java)
     }
+
+
     @Singleton
     @Provides
     fun provideCommentReward(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):CommentRewardI {
         return  retrofitBuilder.client(okHttpClient).build().create(CommentRewardI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserPost(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):UserPostI {
+        return  retrofitBuilder.client(okHttpClient).build().create(UserPostI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideFollower(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):FollowerI {
+        return  retrofitBuilder.client(okHttpClient).build().create(FollowerI::class.java)
+    }
+
+
+    @Singleton
+    @Provides
+    fun provideFollowing(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):FollowingI {
+        return  retrofitBuilder.client(okHttpClient).build().create(FollowingI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideReferralHistory(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):ReferralHistoryI {
+        return  retrofitBuilder.client(okHttpClient).build().create(ReferralHistoryI::class.java)
+    }
+
+
+
+    @Singleton
+    @Provides
+    fun provideDirectReferral(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):DirectReferralI {
+        return  retrofitBuilder.client(okHttpClient).build().create(DirectReferralI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAllUser(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):AllUserI {
+        return  retrofitBuilder.client(okHttpClient).build().create(AllUserI::class.java)
+    }
+    @Singleton
+    @Provides
+    fun provideDeletePost(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):DeletePostI {
+        return  retrofitBuilder.client(okHttpClient).build().create(DeletePostI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideLikePost(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):LikePostI {
+        return  retrofitBuilder.client(okHttpClient).build().create(LikePostI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideFollow(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):FollowI {
+        return  retrofitBuilder.client(okHttpClient).build().create(FollowI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideEditPost(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):EditPostI {
+        return  retrofitBuilder.client(okHttpClient).build().create(EditPostI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUnFollow(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):UnFollowI {
+        return  retrofitBuilder.client(okHttpClient).build().create(UnFollowI::class.java)
     }
 
 
