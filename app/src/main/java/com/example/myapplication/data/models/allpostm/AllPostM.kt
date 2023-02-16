@@ -1,6 +1,6 @@
 package com.example.myapplication.data.models.allpostm
 
-data class ALLPOSTM(
+data class AllPostM(
     val `data`: List<Data>,
     val status: Boolean
 )

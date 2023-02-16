@@ -1,15 +1,15 @@
 package com.example.myapplication.screenui
 
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.R
+import com.example.myapplication.data.models.allpostm.Data
 import com.example.myapplication.screenui.cTopAppBar.CTopAppBar
 import com.example.myapplication.screenui.cTopAppBar.CustomShape
 import com.example.myapplication.screenui.cTopAppBar.DrawerContent
@@ -34,18 +35,24 @@ import com.example.myapplication.ui.theme.chonolulublue
 import com.example.myapplication.ui.theme.cyellow
 import com.example.myapplication.uistate.AllPostS
 import com.example.myapplication.viewmodels.AllPostVM
+import com.example.myapplication.viewmodels.DeletePostVM
+import com.example.myapplication.viewmodels.LikePostVM
 import com.halilibo.richtext.markdown.Markdown
 import com.halilibo.richtext.ui.RichText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(allPostVM: AllPostVM= hiltViewModel()) {
+fun HomeScreen(allPostVM: AllPostVM= hiltViewModel(),deletePostVM: DeletePostVM= hiltViewModel(),likePostVM: LikePostVM= hiltViewModel()) {
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
+    val allPostState = allPostVM._getAllPostStateFlow.collectAsState()
+    val deletePostState = deletePostVM._getDeletePostStateFlow.collectAsState()
+    val likePostState = likePostVM._getLikePostStateFlow.collectAsState()
+    Log.e("1111",likePostState.value.toString())
 
-    val state = allPostVM._getAllPostStateFlow.collectAsState()
-    when (state.value) {
+
+    when (allPostState.value) {
         is AllPostS.Empty -> {
             Column (modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
@@ -71,7 +78,7 @@ fun HomeScreen(allPostVM: AllPostVM= hiltViewModel()) {
         is AllPostS.Loaded -> {
             val context= LocalContext.current
             val clipboardManager: ClipboardManager = LocalClipboardManager.current
-            val data=(state.value as AllPostS.Loaded).data.data
+            val data=(allPostState.value as AllPostS.Loaded).data.data
 
 
             Scaffold(  modifier = Modifier.fillMaxSize(),
@@ -98,12 +105,10 @@ fun HomeScreen(allPostVM: AllPostVM= hiltViewModel()) {
                     item {
                         data.forEachIndexed { index , it ->
                             AllPostCard(
-                                author = it.author ,
-                                hashtag = it.hashtag ,
-                                content = it.content ,
-                                imgHash = it.imgHash ,
-                                timestamp = it.timestamp ,
-                                likeCount = it.likeCount
+                                  it,
+                                deletePostVM,
+                                likePostVM,
+
                             )
                         }
                     }
@@ -135,17 +140,14 @@ fun HomeScreen(allPostVM: AllPostVM= hiltViewModel()) {
 
 
     @Composable
-    fun AllPostCard(
-        author:String,
-        hashtag:String,
-        content:String,
-        imgHash:String,
-        timestamp:String,
-        likeCount:String,
-    ){
+    fun AllPostCard(data: Data , deletePostVM: DeletePostVM , likePostVM: LikePostVM) {
 
-
-
+        val contextForToast = LocalContext.current.applicationContext
+        val listItems = listOf<String>("Edit", "Delete","Report")
+        val disabledItem = 2
+        var expanded by remember {
+            mutableStateOf(false)
+        }
 
     Card(
         modifier = Modifier
@@ -162,7 +164,7 @@ fun HomeScreen(allPostVM: AllPostVM= hiltViewModel()) {
                     modifier = Modifier
                         .size(60.dp)
                         .clip(CircleShape),
-                    painter = rememberAsyncImagePainter(model = imgHash),
+                    painter = rememberAsyncImagePainter(model = data.imgHash),
                     alignment = Alignment.CenterStart,
                     contentDescription = "",
                     contentScale = ContentScale.Crop
@@ -182,7 +184,7 @@ fun HomeScreen(allPostVM: AllPostVM= hiltViewModel()) {
                         ) {
                             Row {
                                 Text(
-                                    text = "Praveen Kumar Sahani",
+                                    text = data.Name,
                                     color = cblack,
                                     style = TextStyle(
                                         fontSize = 16.sp,
@@ -190,7 +192,7 @@ fun HomeScreen(allPostVM: AllPostVM= hiltViewModel()) {
                                     )
                                 )
                                 Text(
-                                    text = "@prkv",
+                                    text = data.usernames,
                                     color = cgraystrongest,
                                     style = TextStyle(
                                         fontSize = 16.sp,
@@ -207,13 +209,55 @@ fun HomeScreen(allPostVM: AllPostVM= hiltViewModel()) {
                             )
                         }
                         Spacer(modifier = Modifier.weight(1.0f))
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_baseline_more_vert_24),
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp),
-                            tint = cgraystrongest
-                        )
+                        Column {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_baseline_more_vert_24) ,
+                                contentDescription = null ,
+                                modifier = Modifier
+                                    .size(16.dp)
+                                    .clickable {
+                                        expanded = true
+                                    } ,
+                                tint = cgraystrongest
+                            )
+                            // drop down menu
+                            DropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = {
+                                    expanded = false
+                                }
+                            ) {
+                                // adding items
+                                listItems.forEachIndexed { itemIndex, itemValue ->
+                                    DropdownMenuItem(
+                                        onClick = {
+                                            Toast.makeText(contextForToast, itemValue, Toast.LENGTH_SHORT)
+                                                .show()
+
+                                                if (itemIndex==0){
+                                                    //edit post
+                                                }
+
+                                                if (itemIndex==1){
+                                                    //delete
+                                                    deletePostVM.getDeletePost(postId = data.allpstId)
+                                                }
+
+                                                if (itemIndex==2){
+                                                    //report post
+                                                }
+
+                                            expanded = false
+                                        },
+                                        enabled = (itemIndex != disabledItem)
+                                    ) {
+                                        Text(text = itemValue,)
+                                    }
+                                }
+                            }
+                        }
                     }
+
 
                     Box() {
 
@@ -222,7 +266,7 @@ fun HomeScreen(allPostVM: AllPostVM= hiltViewModel()) {
 
                         ) {
                             Markdown(
-                                content=content,
+                                content=data.content,
                             )
                         }
 
@@ -232,7 +276,7 @@ fun HomeScreen(allPostVM: AllPostVM= hiltViewModel()) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp),
-                        painter = rememberAsyncImagePainter(model = imgHash),
+                        painter = rememberAsyncImagePainter(model = data.imgHash),
                         alignment = Alignment.CenterStart,
                         contentDescription = "",
                         contentScale = ContentScale.Crop
@@ -242,30 +286,48 @@ fun HomeScreen(allPostVM: AllPostVM= hiltViewModel()) {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.comment),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(24.dp)
-                                .padding(start = 8.dp),
+                        Row {
+                            Icon(
+                                painter = painterResource(id = R.drawable.comment) ,
+                                contentDescription = null ,
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .padding(start = 8.dp) ,
 
-                            )
-                        Icon(
-                            painter = painterResource(id = R.drawable.retweet),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(24.dp)
-                                .padding(start = 8.dp),
+                                )
+                            Row {
+                                Spacer(modifier = Modifier.width(4.dp))
+                            }
+                            Text("5")
+                        }
+                        Row {
+                            Icon(
+                                painter = painterResource(id = R.drawable.retweet) ,
+                                contentDescription = null ,
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .padding(start = 8.dp) ,
 
-                            )
-                        Icon(
-                            painter = painterResource(id = R.drawable.like),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(24.dp)
-                                .padding(start = 8.dp),
+                                )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text("5")
+                        }
+                        Row {
+                            Icon(
+                                painter = painterResource(id = R.drawable.like) ,
+                                contentDescription = null ,
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .padding(start = 8.dp)
+                                    .clickable {
+                                        Log.d("1111","like call")
+                                        likePostVM.getLikePost(postId = data.allpstId)
+                                    } ,
 
-                            )
+                                )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(text = data.likeCount)
+                        }
                         Icon(
                             painter = painterResource(id = R.drawable.views),
                             contentDescription = null,
@@ -274,14 +336,18 @@ fun HomeScreen(allPostVM: AllPostVM= hiltViewModel()) {
                                 .padding(start = 8.dp),
 
                             )
-                        Icon(
-                            painter = painterResource(id = R.drawable.share),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(24.dp)
-                                .padding(start = 8.dp),
+                        Row {
+                            Icon(
+                                painter = painterResource(id = R.drawable.share) ,
+                                contentDescription = null ,
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .padding(start = 8.dp) ,
 
-                            )
+                                )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text("5")
+                        }
 
 
                     }
@@ -291,5 +357,7 @@ fun HomeScreen(allPostVM: AllPostVM= hiltViewModel()) {
             }
         }
     }
+
+
 }
 

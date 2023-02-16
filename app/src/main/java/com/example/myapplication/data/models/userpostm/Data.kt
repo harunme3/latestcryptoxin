@@ -12,6 +12,7 @@ data class Data(
     val `7`: String,
     val `8`: String,
     val `9`: String,
+    val `11`: String,
     val author: String,
     val content: String,
     val hashtag: String,
@@ -22,5 +23,6 @@ data class Data(
     val status: String,
     val timestamp: String,
     val username: String,
-    val videoHash: String
+    val videoHash: String,
+    val Name: String
 )

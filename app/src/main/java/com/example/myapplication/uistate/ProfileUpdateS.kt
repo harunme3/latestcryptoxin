@@ -1,6 +1,5 @@
 package com.example.myapplication.uistate
 
-import com.example.myapplication.data.models.allpostm.ALLPOSTM
 import com.example.myapplication.data.models.profileupdatem.ProfileUpdateM
 
 

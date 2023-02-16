@@ -34,9 +34,8 @@ import com.halilibo.richtext.markdown.Markdown
 import com.halilibo.richtext.ui.RichText
 
 
-
 @Composable
-fun LikesTabScreen(userPostVM: UserPostVM = hiltViewModel() , deletePostVM: DeletePostVM = hiltViewModel() , likePostVM: LikePostVM = hiltViewModel()) {
+fun UserPostScreen(userPostVM: UserPostVM = hiltViewModel() , deletePostVM: DeletePostVM = hiltViewModel() , likePostVM: LikePostVM = hiltViewModel()) {
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
     val userPostState = userPostVM._getUserPostStateFlow.collectAsState()
@@ -75,7 +74,7 @@ fun LikesTabScreen(userPostVM: UserPostVM = hiltViewModel() , deletePostVM: Dele
             Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                 data.forEachIndexed() { index,it->
                     Column() {
-                        LikesTabCard(
+                        UserPostCard(
                             it,
                             deletePostVM,
                             likePostVM,
@@ -98,7 +97,7 @@ fun LikesTabScreen(userPostVM: UserPostVM = hiltViewModel() , deletePostVM: Dele
 
 
 @Composable
-fun LikesTabCard(
+fun UserPostCard(
     data: Data ,
     deletePostVM: DeletePostVM ,
     likePostVM: LikePostVM
@@ -283,7 +282,7 @@ fun LikesTabCard(
                                     .padding(start = 8.dp)
                                     .clickable {
                                         Log.d("1111","like call")
-                                        likePostVM.getLikePost(postId = data.pstId)
+                                likePostVM.getLikePost(postId = data.pstId)
                                     } ,
 
                                 )

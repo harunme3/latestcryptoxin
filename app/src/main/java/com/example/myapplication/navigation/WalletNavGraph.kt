@@ -1,12 +1,12 @@
 package com.example.myapplication.navigation
 
-import androidx.navigation.*
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import com.example.myapplication.screenui.VerifyAccount
+import androidx.navigation.navigation
 import com.example.myapplication.screenui.WalletScreen
 import com.example.myapplication.screenui.profilescreen.FollowerScreen
 import com.example.myapplication.screenui.profilescreen.FollowingScreen
-import com.example.myapplication.screenui.walletui.WalletDashboard
 
 
 fun NavGraphBuilder.walletNavGraph(navController: NavHostController){
@@ -18,16 +18,6 @@ fun NavGraphBuilder.walletNavGraph(navController: NavHostController){
             WalletScreen(navController)
         }
 
-
-        composable(Screens.WalletDashboardScreen.route+"/{walletId}",arguments = listOf(
-            navArgument("walletId")  { type = NavType.IntType },
-        )
-        )
-        {
-            val walletId=it.arguments?.getInt("walletId")
-
-            WalletDashboard(navController, walletId = walletId!!)
-        }
 
         composable(Screens.FollowerScreen.route){
            FollowerScreen(navController)

@@ -29,10 +29,7 @@ import com.example.myapplication.data.models.nooffollower.NoOfFollowerM
 import com.example.myapplication.data.models.nooffollowing.NoOfFollowingM
 import com.example.myapplication.data.models.profilem.ProfileM
 import com.example.myapplication.navigation.Screens
-import com.example.myapplication.screenui.profilescreen.LikesTabScreen
-import com.example.myapplication.screenui.profilescreen.MediaTabScreen
-import com.example.myapplication.screenui.profilescreen.TweetsRepliesTabScreen
-import com.example.myapplication.screenui.profilescreen.TweetsTabScreen
+import com.example.myapplication.screenui.profilescreen.*
 import com.example.myapplication.ui.theme.*
 import com.example.myapplication.uistate.NoOfFollowerS
 import com.example.myapplication.uistate.NoOfFollowingS
@@ -352,7 +349,7 @@ fun Tabs(pagerState: PagerState) {
     // name of the tab and the icon for it.
     val list = listOf(
         "Tox",
-        "Tox & Replies" ,
+        "Comment" ,
         "Media" ,
         "Likes" ,
     )
@@ -440,10 +437,10 @@ fun TabsContent(pagerState: PagerState) {
         when (page) {
             // on below line we are calling tab content screen
             // and specifying data as Home Screen.
-            0 -> TweetsTabScreen()
+            0 -> UserPostScreen()
             // on below line we are calling tab content screen
             // and specifying data as Shopping Screen.
-            1 -> TweetsRepliesTabScreen()
+            1 -> CommentTabScreen()
             // on below line we are calling tab content screen
             // and specifying data as Settings Screen.
             2 -> MediaTabScreen()
