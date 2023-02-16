@@ -21,10 +21,14 @@ fun DashBoardNavGraph(navController: NavHostController, modifier: Modifier){
         toxNavGraph(navController = navController)
         walletNavGraph(navController = navController)
         profileNavGraph(navController = navController)
+        //referral navGraph
+        referralNavGraph(navController = navController)
+        //daily check-in navGraph
+        dailyCheckInNavGraph(navController = navController)
 
-        composable(Screens.ReferralPatternScreen.route){
-          ReferralPattern()
-        }
+
+
+
     }
 
 

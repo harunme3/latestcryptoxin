@@ -26,7 +26,7 @@ import com.example.myapplication.ui.theme.credlight
 @Composable
  fun DrawerContent(
     gradientColors: List<Color> = listOf(chonolulublue, cgrayblue) ,
-    itemClick: (String) -> Unit
+    itemClick: (String) -> Unit,
 ) {
 
     val itemList = prepareNavigationDrawerItems()

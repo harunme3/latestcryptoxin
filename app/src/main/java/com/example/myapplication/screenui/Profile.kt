@@ -403,7 +403,8 @@ fun Tabs(pagerState: PagerState) {
                         // on below line we are specifying the text color
                         // for the text in that tab
                         color = if (pagerState.currentPage == index) Color.White else Color.LightGray,
-                        maxLines = 1
+                        maxLines = 2,
+                        textAlign = TextAlign.Center,
                     )
                 },
                 // on below line we are specifying

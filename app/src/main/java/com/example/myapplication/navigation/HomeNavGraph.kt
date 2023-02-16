@@ -14,7 +14,7 @@ fun NavGraphBuilder.homeNavGraph(navController: NavHostController){
        startDestination = Screens.Home.route
    ){
        composable(Screens.Home.route){
-           HomeScreen()
+           HomeScreen(navController)
        }
 
 

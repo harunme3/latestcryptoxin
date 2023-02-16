@@ -23,9 +23,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.R
 import com.example.myapplication.data.models.allpostm.Data
+import com.example.myapplication.navigation.Graph
 import com.example.myapplication.screenui.cTopAppBar.CTopAppBar
 import com.example.myapplication.screenui.cTopAppBar.CustomShape
 import com.example.myapplication.screenui.cTopAppBar.DrawerContent
@@ -43,14 +46,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(allPostVM: AllPostVM= hiltViewModel(),deletePostVM: DeletePostVM= hiltViewModel(),likePostVM: LikePostVM= hiltViewModel()) {
+fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel(),deletePostVM: DeletePostVM= hiltViewModel(),likePostVM: LikePostVM= hiltViewModel()) {
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
     val allPostState = allPostVM._getAllPostStateFlow.collectAsState()
     val deletePostState = deletePostVM._getDeletePostStateFlow.collectAsState()
     val likePostState = likePostVM._getLikePostStateFlow.collectAsState()
     Log.e("1111",likePostState.value.toString())
-
 
     when (allPostState.value) {
         is AllPostS.Empty -> {
@@ -96,6 +98,19 @@ fun HomeScreen(allPostVM: AllPostVM= hiltViewModel(),deletePostVM: DeletePostVM=
                             // delay for the ripple effect
                             delay(timeMillis = 250)
                             scaffoldState.drawerState.close()
+
+                            if (it=="Referral"){
+                                Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
+                                navController.popBackStack()
+                                navController.navigate(Graph.REFERRAL)
+                            }
+
+                            if (it=="Daily Check-IN"){
+                                Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
+                                navController.popBackStack()
+                                navController.navigate(Graph.DAILY_CHECK_IN)
+                            }
+
                         }
                     }
                 },
@@ -320,7 +335,7 @@ fun HomeScreen(allPostVM: AllPostVM= hiltViewModel(),deletePostVM: DeletePostVM=
                                     .size(24.dp)
                                     .padding(start = 8.dp)
                                     .clickable {
-                                        Log.d("1111","like call")
+                                        Log.d("1111" , "like call")
                                         likePostVM.getLikePost(postId = data.allpstId)
                                     } ,
 

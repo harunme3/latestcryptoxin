@@ -17,7 +17,7 @@ fun RootNavigationGraph(navController: NavHostController){
         //create separate navigation graph for auth
         authNavGraph(navController = navController)
 
-        //create separate navigation graph for dashboard
+        //create a separate navigation graph for dashboard
         composable(route=Graph.DASHBOARD){
             DashBoardScreen()
         }
@@ -37,4 +37,6 @@ object Graph{
     const val TOX ="tox_graph"
     const val WALLET ="wallet_graph"
     const val PROFILE ="profile_graph"
+    const val REFERRAL ="referral_graph"
+    const val DAILY_CHECK_IN ="daily_check_in_graph"
 }

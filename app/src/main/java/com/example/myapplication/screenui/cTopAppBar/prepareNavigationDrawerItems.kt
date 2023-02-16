@@ -12,13 +12,13 @@ import com.example.myapplication.R
     itemsList.add(
         NavigationDrawerItem(
             image = painterResource(id = R.drawable.home),
-            label = "Home"
+            label = "Referral"
         )
     )
     itemsList.add(
         NavigationDrawerItem(
             image = painterResource(id = R.drawable.comment),
-            label = "Messages",
+            label = "Daily Check-IN",
             showUnreadBubble = true
         )
     )
@@ -47,12 +47,7 @@ import com.example.myapplication.R
             label = "Settings"
         )
     )
-    itemsList.add(
-        NavigationDrawerItem(
-            image = painterResource(id = R.drawable.follow),
-            label = "Logout"
-        )
-    )
+
 
     return itemsList
 }
