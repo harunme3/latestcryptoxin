@@ -246,5 +246,23 @@ class NetworkModule {
         return  retrofitBuilder.client(okHttpClient).build().create(SpecificPostI::class.java)
     }
 
+    @Singleton
+    @Provides
+    fun provideCommentRewardSumI(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):CommentRewardSumI {
+        return  retrofitBuilder.client(okHttpClient).build().create(CommentRewardSumI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideLikeRewardSumI(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):LikeRewardSumI {
+        return  retrofitBuilder.client(okHttpClient).build().create(LikeRewardSumI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun providePostRewardSumI(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):PostRewardSumI {
+        return  retrofitBuilder.client(okHttpClient).build().create(PostRewardSumI::class.java)
+    }
+
 
 }

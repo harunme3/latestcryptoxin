@@ -21,15 +21,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.myapplication.data.datasource.roomdata.WalletEntity
 import com.example.myapplication.data.models.bonusrewardm.BonusRewardM
-import com.example.myapplication.data.models.directreferralcountm.DirectReferralCountM
+import com.example.myapplication.data.models.commentrewardsumm.CommentRewardSumM
+import com.example.myapplication.data.models.likerewardsumm.LikeRewardSumM
+import com.example.myapplication.data.models.postrewardsumm.PostRewardSumM
 import com.example.myapplication.data.models.referralhistory.ReferralHistoryM
-import com.example.myapplication.data.models.referralrewardm.ReferralRewardM
-import com.example.myapplication.data.models.totalreferralcountm.TotalReferralCountM
 import com.example.myapplication.screenui.walletui.CommentRewardScreen
 import com.example.myapplication.screenui.walletui.LikeRewardScreen
 import com.example.myapplication.screenui.walletui.PostRewardScreen
 import com.example.myapplication.screenui.walletui.TransactionHistoryScreen
-import com.example.myapplication.ui.theme.cblack
 import com.example.myapplication.ui.theme.chonolulublue
 import com.example.myapplication.ui.theme.cwhite
 import com.example.myapplication.ui.theme.cyellow
@@ -42,9 +41,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun DailyCheckInDashboard(
     navController: NavController ,
-    referralRewardVM: ReferralRewardVM = hiltViewModel() ,
-    totalReferralCountVM: TotalReferralCountVM = hiltViewModel() ,
-    directReferralCountVM: DirectReferralCountVM = hiltViewModel() ,
+    likeRewardSumVM: LikeRewardSumVM = hiltViewModel() ,
+    postRewardSumVM: PostRewardSumVM = hiltViewModel() ,
+    commentRewardSumVM: CommentRewardSumVM = hiltViewModel() ,
     bonusRewardVM: BonusRewardVM = hiltViewModel() ,
     referralHistoryVM: ReferralHistoryVM = hiltViewModel() ,
     walletVM: WalletVM = hiltViewModel()
@@ -53,21 +52,21 @@ fun DailyCheckInDashboard(
 ) {
     LaunchedEffect(Unit) {
         walletVM.getWallet(walletId = 1)
-        referralRewardVM.getReferralReward()
-        totalReferralCountVM.getTotalReferralCount()
-        directReferralCountVM.getDirectReferralCount()
+        likeRewardSumVM.getLikeRewardSum()
+        postRewardSumVM.getPostRewardSum()
+        commentRewardSumVM.getCommentRewardSum()
     }
     val walletState =
         walletVM._getWalletStateFlow.collectAsState()
     val bonusRewardState = bonusRewardVM._getBonusRewardStateFlow.collectAsState()
     val referralHistoryState = referralHistoryVM._getReferralHistoryStateFlow.collectAsState()
-    val referralRewardState = referralRewardVM._getReferralRewardStateFlow.collectAsState()
-    val totalReferralCountState =
-        totalReferralCountVM._getTotalReferralCountStateFlow.collectAsState()
-    val directReferralCountState =
-        directReferralCountVM._getDirectReferralCountStateFlow.collectAsState()
-    when (referralRewardState.value) {
-        is ReferralRewardS.Empty -> {
+    val likeRewardSumState = likeRewardSumVM._getLikeRewardSumStateFlow.collectAsState()
+    val postRewardSumState =
+        postRewardSumVM._getPostRewardSumStateFlow.collectAsState()
+    val commentRewardSumState =
+        commentRewardSumVM._getCommentRewardSumStateFlow.collectAsState()
+    when (likeRewardSumState.value) {
+        is LikeRewardSumS.Empty -> {
             Column(
                 modifier = Modifier.fillMaxSize() ,
                 verticalArrangement = Arrangement.Center ,
@@ -80,7 +79,7 @@ fun DailyCheckInDashboard(
                 )
             }
         }
-        is ReferralRewardS.Loading -> {
+        is LikeRewardSumS.Loading -> {
             Column(
                 modifier = Modifier.fillMaxSize() ,
                 verticalArrangement = Arrangement.Center ,
@@ -92,10 +91,10 @@ fun DailyCheckInDashboard(
                 )
             }
         }
-        is ReferralRewardS.Error -> Text(text = "error")
-        is ReferralRewardS.Loaded -> {
-            when (totalReferralCountState.value) {
-                is TotalReferralCountS.Empty -> {
+        is LikeRewardSumS.Error -> Text(text = "error")
+        is LikeRewardSumS.Loaded -> {
+            when (postRewardSumState.value) {
+                is PostRewardSumS.Empty -> {
                     Column(
                         modifier = Modifier.fillMaxSize() ,
                         verticalArrangement = Arrangement.Center ,
@@ -108,7 +107,7 @@ fun DailyCheckInDashboard(
                         )
                     }
                 }
-                is TotalReferralCountS.Loading -> {
+                is PostRewardSumS.Loading -> {
                     Column(
                         modifier = Modifier.fillMaxSize() ,
                         verticalArrangement = Arrangement.Center ,
@@ -120,12 +119,12 @@ fun DailyCheckInDashboard(
                         )
                     }
                 }
-                is TotalReferralCountS.Error -> Text(text = "error")
-                is TotalReferralCountS.Loaded -> {
+                is PostRewardSumS.Error -> Text(text = "error")
+                is PostRewardSumS.Loaded -> {
 
 
-                    when (directReferralCountState.value) {
-                        is DirectReferralCountS.Empty -> {
+                    when (commentRewardSumState.value) {
+                        is CommentRewardSumS.Empty -> {
                             Column(
                                 modifier = Modifier.fillMaxSize() ,
                                 verticalArrangement = Arrangement.Center ,
@@ -138,7 +137,7 @@ fun DailyCheckInDashboard(
                                 )
                             }
                         }
-                        is DirectReferralCountS.Loading -> {
+                        is CommentRewardSumS.Loading -> {
                             Column(
                                 modifier = Modifier.fillMaxSize() ,
                                 verticalArrangement = Arrangement.Center ,
@@ -150,8 +149,8 @@ fun DailyCheckInDashboard(
                                 )
                             }
                         }
-                        is DirectReferralCountS.Error -> Text(text = "error")
-                        is DirectReferralCountS.Loaded -> {
+                        is CommentRewardSumS.Error -> Text(text = "error")
+                        is CommentRewardSumS.Loaded -> {
 
 
                             when (bonusRewardState.value) {
@@ -214,12 +213,12 @@ fun DailyCheckInDashboard(
                                         is ReferralHistoryS.Loaded -> {
 
 
-                                            val referralRewardData =
-                                                (referralRewardState.value as ReferralRewardS.Loaded).data
-                                            val totalReferralCountData =
-                                                (totalReferralCountState.value as TotalReferralCountS.Loaded).data
-                                            val directReferralCountData =
-                                                (directReferralCountState.value as DirectReferralCountS.Loaded).data
+                                            val likeRewardSumData =
+                                                (likeRewardSumState.value as LikeRewardSumS.Loaded).data
+                                            val postRewardSumData =
+                                                (postRewardSumState.value as PostRewardSumS.Loaded).data
+                                            val commentRewardSumData =
+                                                (commentRewardSumState.value as CommentRewardSumS.Loaded).data
                                             val bonusRewardData =
                                                 (bonusRewardState.value as BonusRewardS.Loaded).data
                                             val referralHistoryData =
@@ -227,9 +226,9 @@ fun DailyCheckInDashboard(
                                             val walletData =
                                                 (walletState.value as WalletIdS.Loaded).data
                                             DailyCheckInDashboardComponent(
-                                                referralRewardData ,
-                                                totalReferralCountData ,
-                                                directReferralCountData,
+                                                likeRewardSumData ,
+                                                postRewardSumData ,
+                                                commentRewardSumData,
                                                 bonusRewardData,
                                                 referralHistoryData,
                                                 walletData
@@ -268,14 +267,13 @@ fun DailyCheckInDashboard(
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun DailyCheckInDashboardComponent(
-    referralRewardData: ReferralRewardM ,
-    totalReferralCountData: TotalReferralCountM ,
-    directReferralCountData: DirectReferralCountM ,
+    likeRewardSumData: LikeRewardSumM ,
+    postRewardSumData: PostRewardSumM ,
+    commentRewardSumData: CommentRewardSumM ,
     bonusRewardData: BonusRewardM ,
     referralHistoryData: ReferralHistoryM ,
-    walletData: WalletEntity ,
-
-    ) {
+    walletData: WalletEntity
+) {
     Column {
         Box(
             modifier = Modifier
@@ -333,20 +331,20 @@ fun DailyCheckInDashboardComponent(
                                 text = "Total Post Reward Earned" ,
                                 style = TextStyle(fontWeight = FontWeight.Bold , fontSize = 16.sp)
                             )
-                            Text(text = referralRewardData.data)
+                            Text(text = postRewardSumData.data)
                             Spacer(modifier = Modifier.height(2.dp))
 
                             Text(
                                 text = "Total Like Reward Earned" ,
                                 style = TextStyle(fontWeight = FontWeight.Bold , fontSize = 16.sp)
                             )
-                            Text(text = totalReferralCountData.data)
+                            Text(text = likeRewardSumData.data)
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
                                 text = "Total  Comment Reward Earned" ,
                                 style = TextStyle(fontWeight = FontWeight.Bold , fontSize = 16.sp)
                             )
-                            Text(text = directReferralCountData.data)
+                            Text(text = commentRewardSumData.data)
 
                         }
 
