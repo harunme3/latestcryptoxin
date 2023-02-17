@@ -19,22 +19,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myapplication.R
+import com.example.myapplication.data.models.postrewardm.Data
+import com.example.myapplication.ui.theme.*
 import com.example.myapplication.uistate.PostRewardS
-import com.example.myapplication.ui.theme.cgraystronglight
-import com.example.myapplication.ui.theme.chonolulublue
-import com.example.myapplication.ui.theme.cwhite
-import com.example.myapplication.ui.theme.cyellow
 import com.example.myapplication.viewmodels.PostRewardVM
 
 
 @Composable
 fun PostRewardScreen(postRewardVM: PostRewardVM= hiltViewModel()) {
 
-    val likeRewardState = postRewardVM._getPostRewardStateFlow.collectAsState()
-    Log.e("1111" , likeRewardState.value.toString())
+    val postRewardState = postRewardVM._getPostRewardStateFlow.collectAsState()
+    Log.e("1111" , postRewardState.value.toString())
 
 
-    when (likeRewardState.value) {
+    when (postRewardState.value) {
         is PostRewardS.Empty -> {
             Column(
                 modifier = Modifier.fillMaxSize() ,
@@ -62,14 +60,14 @@ fun PostRewardScreen(postRewardVM: PostRewardVM= hiltViewModel()) {
         }
         is PostRewardS.Error -> Text(text = "error")
         is PostRewardS.Loaded -> {
-            val data = (likeRewardState.value as PostRewardS.Loaded).data.data
+            val postRewardData = (postRewardState.value as PostRewardS.Loaded).data.data
 
 
             Column(
                 modifier = Modifier.fillMaxWidth() ,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                (1..2).forEachIndexed() { index , it ->
+                postRewardData.forEachIndexed() { index , it ->
                     Column() {
                         PostRewardScreenCard(it)
                     }
@@ -87,7 +85,7 @@ fun PostRewardScreen(postRewardVM: PostRewardVM= hiltViewModel()) {
 
 
 @Composable
-fun PostRewardScreenCard(any: Any) {
+fun PostRewardScreenCard(data: Data) {
 
     Card(
         modifier = Modifier
@@ -99,7 +97,7 @@ fun PostRewardScreenCard(any: Any) {
                 //cin scan url
             }) ,
         elevation = 0.dp ,
-        backgroundColor = cgraystronglight
+        backgroundColor = cgraystrongest
     ) {
         Row(
             modifier = Modifier
@@ -113,7 +111,7 @@ fun PostRewardScreenCard(any: Any) {
                 modifier = Modifier
                     .size(60.dp)
                     .clip(CircleShape) ,
-                painter = painterResource(id = R.drawable.cdarklogo) ,
+                painter = painterResource(id = com.example.myapplication.R.drawable.cdarklogo) ,
                 alignment = Alignment.CenterStart ,
                 contentDescription = "" ,
                 contentScale = ContentScale.Crop
@@ -124,7 +122,7 @@ fun PostRewardScreenCard(any: Any) {
                     .weight(1f)
             ) {
                 Text(
-                    text = "2" ,
+                    text ="${data.amt} CIN" ,
                     color = MaterialTheme.colors.surface ,
                     fontWeight = FontWeight.Bold ,
                     style = MaterialTheme.typography.subtitle1
@@ -132,7 +130,7 @@ fun PostRewardScreenCard(any: Any) {
                 Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
-                    text = "walletEntity.address" ,
+                    text =data.username ,
                     modifier = Modifier.padding(0.dp , 0.dp , 12.dp , 0.dp) ,
                     color = cwhite ,
                     style = MaterialTheme.typography.caption
@@ -140,14 +138,6 @@ fun PostRewardScreenCard(any: Any) {
             }
 
 
-
-
-            Icon(
-                painter = painterResource(id = R.drawable.ic_baseline_more_vert_24) ,
-                contentDescription = null ,
-                modifier = Modifier.size(24.dp) ,
-                tint = Color.Red
-            )
         }
     }
 }

@@ -25,6 +25,8 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.R
 import com.example.myapplication.data.models.userpostm.Data
 import com.example.myapplication.ui.theme.*
+import com.example.myapplication.uistate.DeletePostS
+import com.example.myapplication.uistate.LikePostS
 import com.example.myapplication.uistate.UserPostS
 import com.example.myapplication.viewmodels.DeletePostVM
 import com.example.myapplication.viewmodels.LikePostVM
@@ -95,18 +97,38 @@ fun MediaTabScreen(userPostVM: UserPostVM = hiltViewModel() , deletePostVM: Dele
 
 
 
+
+
 @Composable
-fun MediaTabCard(
-    data: Data ,
-    deletePostVM: DeletePostVM ,
-    likePostVM: LikePostVM
-) {
+fun MediaTabCard(data: Data ,
+                 deletePostVM: DeletePostVM ,
+                 likePostVM: LikePostVM) {
 
     val contextForToast = LocalContext.current.applicationContext
+
+    val context= LocalContext.current
     val listItems = listOf<String>("Edit", "Delete","Report")
     val disabledItem = 2
     var expanded by remember {
         mutableStateOf(false)
+    }
+
+    val likePostState = likePostVM._getLikePostStateFlow.collectAsState()
+
+    val deletePostState = deletePostVM._getDeletePostStateFlow.collectAsState()
+
+    if (likePostState.value is LikePostS.Loaded){
+        LaunchedEffect(key1 ="key3"){
+            Toast.makeText(context, "Edit", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+    if (deletePostState.value is DeletePostS.Loaded){
+        LaunchedEffect(key1 ="key4"){
+            Toast.makeText(context, "Deleted Successfully", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     Card(
@@ -124,7 +146,7 @@ fun MediaTabCard(
                     modifier = Modifier
                         .size(60.dp)
                         .clip(CircleShape),
-                    painter = rememberAsyncImagePainter(model = data.imgHash) ,
+                    painter = rememberAsyncImagePainter(model = data.imgHash),
                     alignment = Alignment.CenterStart,
                     contentDescription = "",
                     contentScale = ContentScale.Crop
@@ -145,7 +167,7 @@ fun MediaTabCard(
                             Row {
                                 Text(
                                     text = data.Name,
-                                    color = cblack ,
+                                    color = cblack,
                                     style = TextStyle(
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.Bold,
@@ -153,7 +175,7 @@ fun MediaTabCard(
                                 )
                                 Text(
                                     text = data.username,
-                                    color = cgraystrongest ,
+                                    color = cgraystrongest,
                                     style = TextStyle(
                                         fontSize = 16.sp,
                                     )
@@ -162,7 +184,7 @@ fun MediaTabCard(
 
                             Text(
                                 text = ". 24d",
-                                color = cgraystrongest ,
+                                color = cgraystrongest,
                                 style = TextStyle(
                                     fontSize = 16.sp,
                                 )
@@ -219,7 +241,9 @@ fun MediaTabCard(
                     }
 
 
-                    Box() {
+                    Box(modifier = Modifier.clickable {
+
+                    }) {
 
                         RichText(
                             modifier = Modifier.padding(16.dp),
@@ -236,7 +260,7 @@ fun MediaTabCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp),
-                        painter = rememberAsyncImagePainter(model = data.imgHash) ,
+                        painter = rememberAsyncImagePainter(model = data.imgHash),
                         alignment = Alignment.CenterStart,
                         contentDescription = "",
                         contentScale = ContentScale.Crop
@@ -252,13 +276,17 @@ fun MediaTabCard(
                                 contentDescription = null ,
                                 modifier = Modifier
                                     .size(24.dp)
-                                    .padding(start = 8.dp) ,
+                                    .padding(start = 8.dp).clickable {
+
+
+
+                                    } ,
 
                                 )
                             Row {
                                 Spacer(modifier = Modifier.width(4.dp))
                             }
-                            Text("5")
+                            Text(text = data.CommentCount)
                         }
                         Row {
                             Icon(
@@ -270,7 +298,7 @@ fun MediaTabCard(
 
                                 )
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("5")
+                            Text(text = data.reportCount)
                         }
                         Row {
                             Icon(
@@ -280,7 +308,6 @@ fun MediaTabCard(
                                     .size(24.dp)
                                     .padding(start = 8.dp)
                                     .clickable {
-                                        Log.d("1111","like call")
                                         likePostVM.getLikePost(postId = data.pstId)
                                     } ,
 
@@ -289,26 +316,13 @@ fun MediaTabCard(
                             Text(text = data.likeCount)
                         }
                         Icon(
-                            painter = painterResource(id = R.drawable.views) ,
+                            painter = painterResource(id = R.drawable.share),
                             contentDescription = null,
                             modifier = Modifier
                                 .size(24.dp)
                                 .padding(start = 8.dp),
 
                             )
-                        Row {
-                            Icon(
-                                painter = painterResource(id = R.drawable.share) ,
-                                contentDescription = null ,
-                                modifier = Modifier
-                                    .size(24.dp)
-                                    .padding(start = 8.dp) ,
-
-                                )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text("5")
-                        }
-
 
                     }
                 }

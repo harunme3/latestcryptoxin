@@ -19,23 +19,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.myapplication.uistate.CommentRewardS
-import com.example.myapplication.ui.theme.cgraystronglight
-import com.example.myapplication.ui.theme.chonolulublue
-import com.example.myapplication.ui.theme.cwhite
-import com.example.myapplication.ui.theme.cyellow
-import com.example.myapplication.viewmodels.CommentRewardVM
+import com.example.myapplication.data.models.trxhistorym.Result
+import com.example.myapplication.ui.theme.*
+import com.example.myapplication.uistate.TrxHistoryS
+import com.example.myapplication.viewmodels.TrxHistoryVM
 
 
 @Composable
-fun TransactionHistoryScreen(commentRewardVM: CommentRewardVM = hiltViewModel()) {
+fun TransactionHistoryScreen(trxHistoryVM: TrxHistoryVM= hiltViewModel()) {
 
-    val commentRewardState = commentRewardVM._getCommentRewardStateFlow.collectAsState()
-    Log.e("1111" , commentRewardState.value.toString())
+    val trxHistoryState = trxHistoryVM._getTrxHistoryStateFlow.collectAsState()
+    Log.e("1111" , trxHistoryState.value.toString())
 
 
-    when (commentRewardState.value) {
-        is CommentRewardS.Empty -> {
+    when (trxHistoryState.value) {
+        is TrxHistoryS.Empty -> {
             Column(
                 modifier = Modifier.fillMaxSize() ,
                 verticalArrangement = Arrangement.Center ,
@@ -48,7 +46,7 @@ fun TransactionHistoryScreen(commentRewardVM: CommentRewardVM = hiltViewModel())
                 )
             }
         }
-        is CommentRewardS.Loading -> {
+        is TrxHistoryS.Loading -> {
             Column(
                 modifier = Modifier.fillMaxSize() ,
                 verticalArrangement = Arrangement.Center ,
@@ -60,16 +58,16 @@ fun TransactionHistoryScreen(commentRewardVM: CommentRewardVM = hiltViewModel())
                 )
             }
         }
-        is CommentRewardS.Error -> Text(text = "error")
-        is CommentRewardS.Loaded -> {
-            val data = (commentRewardState.value as CommentRewardS.Loaded).data.data
+        is TrxHistoryS.Error -> Text(text = "error")
+        is TrxHistoryS.Loaded -> {
+            val trxHistoryData = (trxHistoryState.value as TrxHistoryS.Loaded).data.msg.result
 
 
             Column(
                 modifier = Modifier.fillMaxWidth() ,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-               (1..2).forEachIndexed() { index , it ->
+                trxHistoryData.forEachIndexed() { index , it ->
                     Column() {
                         TransactionHistoryCard(it)
                     }
@@ -87,7 +85,7 @@ fun TransactionHistoryScreen(commentRewardVM: CommentRewardVM = hiltViewModel())
 
 
 @Composable
-fun TransactionHistoryCard(any: Any) {
+fun TransactionHistoryCard(result: Result) {
 
     Card(
         modifier = Modifier
@@ -99,7 +97,7 @@ fun TransactionHistoryCard(any: Any) {
                 //cin scan url
             }) ,
         elevation = 0.dp ,
-        backgroundColor = cgraystronglight
+        backgroundColor = cgraystrongest
     ) {
         Row(
             modifier = Modifier
@@ -124,7 +122,7 @@ fun TransactionHistoryCard(any: Any) {
                     .weight(1f)
             ) {
                 Text(
-                    text = "2" ,
+                    text ="${result.value} CIN" ,
                     color = MaterialTheme.colors.surface ,
                     fontWeight = FontWeight.Bold ,
                     style = typography.subtitle1
@@ -132,22 +130,14 @@ fun TransactionHistoryCard(any: Any) {
                 Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
-                    text = "walletEntity.address" ,
+                    text =result.hash ,
                     modifier = Modifier.padding(0.dp , 0.dp , 12.dp , 0.dp) ,
                     color = cwhite ,
                     style = typography.caption
                 )
             }
 
-
-
-
-            Icon(
-                painter = painterResource(id = com.example.myapplication.R.drawable.ic_baseline_more_vert_24) ,
-                contentDescription = null ,
-                modifier = Modifier.size(24.dp) ,
-                tint = Color.Red
-            )
+            
         }
     }
 }

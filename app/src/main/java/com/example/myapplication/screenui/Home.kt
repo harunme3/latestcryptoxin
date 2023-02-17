@@ -38,6 +38,9 @@ import com.example.myapplication.ui.theme.cgraystrongest
 import com.example.myapplication.ui.theme.chonolulublue
 import com.example.myapplication.ui.theme.cyellow
 import com.example.myapplication.uistate.AllPostS
+import com.example.myapplication.uistate.CreateCommentS
+import com.example.myapplication.uistate.DeletePostS
+import com.example.myapplication.uistate.LikePostS
 import com.example.myapplication.viewmodels.AllPostVM
 import com.example.myapplication.viewmodels.DeletePostVM
 import com.example.myapplication.viewmodels.LikePostVM
@@ -47,13 +50,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel(),deletePostVM: DeletePostVM= hiltViewModel(),likePostVM: LikePostVM= hiltViewModel()) {
+fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel(),
+
+) {
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
     val allPostState = allPostVM._getAllPostStateFlow.collectAsState()
-    val deletePostState = deletePostVM._getDeletePostStateFlow.collectAsState()
-    val likePostState = likePostVM._getLikePostStateFlow.collectAsState()
-    Log.e("1111",likePostState.value.toString())
+
+
+
 
     when (allPostState.value) {
         is AllPostS.Empty -> {
@@ -122,8 +127,6 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
                         data.forEachIndexed { index , it ->
                             AllPostCard(
                                   it,
-                                deletePostVM,
-                                likePostVM,
                              navController
                             )
                         }
@@ -156,13 +159,34 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
 
 
     @Composable
-    fun AllPostCard(data: Data , deletePostVM: DeletePostVM , likePostVM: LikePostVM,navController: NavController) {
+    fun AllPostCard(data: Data ,navController: NavController,    deletePostVM: DeletePostVM= hiltViewModel(),
+                    likePostVM: LikePostVM= hiltViewModel()) {
 
         val contextForToast = LocalContext.current.applicationContext
+
+        val context= LocalContext.current
         val listItems = listOf<String>("Edit", "Delete","Report")
         val disabledItem = 2
         var expanded by remember {
             mutableStateOf(false)
+        }
+
+        val likePostState = likePostVM._getLikePostStateFlow.collectAsState()
+
+        val deletePostState = deletePostVM._getDeletePostStateFlow.collectAsState()
+
+        if (likePostState.value is LikePostS.Loaded){
+            LaunchedEffect(key1 ="key3"){
+                Toast.makeText(context, "Edit", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+
+        if (deletePostState.value is DeletePostS.Loaded){
+            LaunchedEffect(key1 ="key4"){
+                Toast.makeText(context, "Deleted Successfully", Toast.LENGTH_SHORT).show()
+            }
+
         }
 
     Card(

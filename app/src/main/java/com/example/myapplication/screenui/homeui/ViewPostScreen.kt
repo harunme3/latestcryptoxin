@@ -25,6 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.R
+import com.example.myapplication.data.models.commentsm.Data
 import com.example.myapplication.data.models.specificpostm.SpecificPostM
 import com.example.myapplication.ui.theme.*
 import com.example.myapplication.uistate.CommentsS
@@ -349,7 +350,7 @@ fun ViewPostCard(
 
 
 @Composable
-fun ViewPostScreenCard(any: Any) {
+fun ViewPostScreenCard(data: Data) {
 
     Card(
         modifier = Modifier
@@ -386,7 +387,7 @@ fun ViewPostScreenCard(any: Any) {
                     .weight(1f)
             ) {
                 Text(
-                    text = "2" ,
+                    text = data.reciver ,
                     color = MaterialTheme.colors.surface ,
                     fontWeight = FontWeight.Bold ,
                     style = MaterialTheme.typography.subtitle1
@@ -394,22 +395,13 @@ fun ViewPostScreenCard(any: Any) {
                 Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
-                    text = "walletEntity.address" ,
+                    text = data.messages ,
                     modifier = Modifier.padding(0.dp , 0.dp , 12.dp , 0.dp) ,
                     color = cwhite ,
                     style = MaterialTheme.typography.caption
                 )
             }
 
-
-
-
-            Icon(
-                painter = painterResource(id = R.drawable.ic_baseline_more_vert_24) ,
-                contentDescription = null ,
-                modifier = Modifier.size(24.dp) ,
-                tint = Color.Red
-            )
         }
     }
 }

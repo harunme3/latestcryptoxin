@@ -273,8 +273,15 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun providePCinBalance(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):CinBalanceI {
+    fun provideCinBalance(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):CinBalanceI {
         return  retrofitBuilder.client(okHttpClient).build().create(CinBalanceI::class.java)
+    }
+
+
+    @Singleton
+    @Provides
+    fun provideTrxHistory(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):TrxHistoryI {
+        return  retrofitBuilder.client(okHttpClient).build().create(TrxHistoryI::class.java)
     }
 
 

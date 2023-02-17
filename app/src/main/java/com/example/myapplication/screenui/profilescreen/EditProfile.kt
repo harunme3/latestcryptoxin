@@ -3,6 +3,7 @@ package com.example.myapplication.screenui.profilescreen
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import android.provider.ContactsContract.Profile
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -11,10 +12,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,9 +35,17 @@ import com.example.myapplication.R
 import com.example.myapplication.data.datasource.remotedata.ImageUpdateInterface
 import com.example.myapplication.data.datasource.remotedata.TestInterface
 import com.example.myapplication.data.models.imageupdatemodel.ImageUpdateModel
+import com.example.myapplication.screenui.walletui.TransactionHistoryCard
 import com.example.myapplication.ui.theme.cgraylight
 import com.example.myapplication.ui.theme.cgraystronglight
+import com.example.myapplication.ui.theme.chonolulublue
+import com.example.myapplication.ui.theme.cyellow
+import com.example.myapplication.uistate.ProfileS
+import com.example.myapplication.uistate.TrxHistoryS
+import com.example.myapplication.viewmodels.EditPostVM
 import com.example.myapplication.viewmodels.ImageUpdateViewModel
+import com.example.myapplication.viewmodels.ProfileVM
+import com.example.myapplication.viewmodels.TrxHistoryVM
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -54,23 +60,84 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @Composable
-fun EditProfile( imageUpdateViewModel: ImageUpdateViewModel= hiltViewModel()){
+fun EditProfile( profileVM: ProfileVM= hiltViewModel()) {
+
+    val profileState = profileVM._getProfileStateFlow.collectAsState()
+    Log.e("1111" , profileState.value.toString())
+
+
+    when (profileState.value) {
+        is ProfileS.Empty -> {
+            Column(
+                modifier = Modifier.fillMaxSize() ,
+                verticalArrangement = Arrangement.Center ,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.then(Modifier.size(32.dp)) ,
+                    color = cyellow
+
+                )
+            }
+        }
+        is ProfileS.Loading -> {
+            Column(
+                modifier = Modifier.fillMaxSize() ,
+                verticalArrangement = Arrangement.Center ,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.then(Modifier.size(64.dp)) ,
+                    color = chonolulublue
+                )
+            }
+        }
+        is ProfileS.Error -> Text(text = "error")
+        is ProfileS.Loaded -> {
+            val profileStateData = (profileState.value as ProfileS.Loaded).data
+
+
+            EditProfileComponent()
+
+        }
+
+
+    }
+
+
+}
+
+
+@Composable
+fun EditProfileComponent(
+    imageUpdateViewModel: ImageUpdateViewModel= hiltViewModel(),
+    editPostVM: EditPostVM= hiltViewModel(),
+
+){
 
     val ctx = LocalContext.current
-
     val stateUpdateImage = imageUpdateViewModel._getUserStateFlow.collectAsState()
-
-
     var selectedImage by remember {
         mutableStateOf<Uri?>(null)
     }
-
-
     var multifiles : MutableList<MultipartBody.Part> = remember {
         mutableStateListOf()
     }
-
     val launcher = rememberLauncherForActivityResult(contract =
      ActivityResultContracts.GetContent()) { uri: Uri? ->
         selectedImage = uri
@@ -84,8 +151,6 @@ fun EditProfile( imageUpdateViewModel: ImageUpdateViewModel= hiltViewModel()){
                     .background(Color.White)
                     .padding(horizontal = 16.dp),
             ) {
-
-                Text(text = stateUpdateImage.value.toString())
 
                 Box(modifier = Modifier.fillMaxHeight(0.05f)) {
                     Row(
@@ -161,15 +226,15 @@ fun EditProfile( imageUpdateViewModel: ImageUpdateViewModel= hiltViewModel()){
                                     .background(
                                         Brush.horizontalGradient(
                                             listOf(
-                                                Color(0xFF0e4869),
-                                                Color(0xFF175c87),
-                                                Color(0xFF2470a6),
-                                                Color(0xFF3385c6),
-                                                Color(0xFF459ae7),
-                                            ),
-                                        ),
+                                                Color(0xFF0e4869) ,
+                                                Color(0xFF175c87) ,
+                                                Color(0xFF2470a6) ,
+                                                Color(0xFF3385c6) ,
+                                                Color(0xFF459ae7) ,
+                                            ) ,
+                                        ) ,
                                     )
-                                    .padding(horizontal = 18.dp, vertical = 8.dp),
+                                    .padding(horizontal = 18.dp , vertical = 8.dp),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(text = "Save", color = Color.White)

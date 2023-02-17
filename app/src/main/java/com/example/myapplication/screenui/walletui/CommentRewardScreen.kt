@@ -19,10 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myapplication.R
-import com.example.myapplication.ui.theme.cgraystronglight
-import com.example.myapplication.ui.theme.chonolulublue
-import com.example.myapplication.ui.theme.cwhite
-import com.example.myapplication.ui.theme.cyellow
+import com.example.myapplication.data.models.commentrewardm.Data
+import com.example.myapplication.ui.theme.*
 import com.example.myapplication.uistate.CommentRewardS
 import com.example.myapplication.viewmodels.CommentRewardVM
 
@@ -63,14 +61,14 @@ fun CommentRewardScreen(commentRewardVM: CommentRewardVM = hiltViewModel()) {
         }
         is CommentRewardS.Error -> Text(text = "error")
         is CommentRewardS.Loaded -> {
-            val data = (commentRewardState.value as CommentRewardS.Loaded).data.data
+            val commentRewardData = (commentRewardState.value as CommentRewardS.Loaded).data.data
 
 
             Column(
                 modifier = Modifier.fillMaxWidth() ,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                (1..2).forEachIndexed() { index , it ->
+                commentRewardData.forEachIndexed() { index , it ->
                     Column() {
                         CommentRewardScreenCard(it)
                     }
@@ -88,7 +86,7 @@ fun CommentRewardScreen(commentRewardVM: CommentRewardVM = hiltViewModel()) {
 
 
 @Composable
-fun CommentRewardScreenCard(any: Any) {
+fun CommentRewardScreenCard(data: Data) {
 
     Card(
         modifier = Modifier
@@ -100,7 +98,7 @@ fun CommentRewardScreenCard(any: Any) {
                 //cin scan url
             }) ,
         elevation = 0.dp ,
-        backgroundColor = cgraystronglight
+        backgroundColor = cgraystrongest
     ) {
         Row(
             modifier = Modifier
@@ -114,7 +112,7 @@ fun CommentRewardScreenCard(any: Any) {
                 modifier = Modifier
                     .size(60.dp)
                     .clip(CircleShape) ,
-                painter = painterResource(id = R.drawable.cdarklogo) ,
+                painter = painterResource(id = com.example.myapplication.R.drawable.cdarklogo) ,
                 alignment = Alignment.CenterStart ,
                 contentDescription = "" ,
                 contentScale = ContentScale.Crop
@@ -125,7 +123,7 @@ fun CommentRewardScreenCard(any: Any) {
                     .weight(1f)
             ) {
                 Text(
-                    text = "2" ,
+                    text ="${data.amt} CIN" ,
                     color = MaterialTheme.colors.surface ,
                     fontWeight = FontWeight.Bold ,
                     style = MaterialTheme.typography.subtitle1
@@ -133,7 +131,7 @@ fun CommentRewardScreenCard(any: Any) {
                 Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
-                    text = "walletEntity.address" ,
+                    text =data.username ,
                     modifier = Modifier.padding(0.dp , 0.dp , 12.dp , 0.dp) ,
                     color = cwhite ,
                     style = MaterialTheme.typography.caption
@@ -141,14 +139,6 @@ fun CommentRewardScreenCard(any: Any) {
             }
 
 
-
-
-            Icon(
-                painter = painterResource(id = R.drawable.ic_baseline_more_vert_24) ,
-                contentDescription = null ,
-                modifier = Modifier.size(24.dp) ,
-                tint = Color.Red
-            )
         }
     }
 }
