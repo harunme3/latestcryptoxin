@@ -1,81 +1,35 @@
 package com.example.myapplication.screenui.profilescreen
 
-import android.content.Context
-import android.net.Uri
-import android.os.Environment
-import android.provider.ContactsContract.Profile
 import android.util.Log
-import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.rememberAsyncImagePainter
-import com.example.myapplication.R
-import com.example.myapplication.data.datasource.remotedata.ImageUpdateInterface
-import com.example.myapplication.data.datasource.remotedata.TestInterface
-import com.example.myapplication.data.models.imageupdatemodel.ImageUpdateModel
-import com.example.myapplication.screenui.walletui.TransactionHistoryCard
+import androidx.navigation.NavController
+import com.example.myapplication.data.models.profilem.ProfileM
 import com.example.myapplication.ui.theme.cgraylight
 import com.example.myapplication.ui.theme.cgraystronglight
 import com.example.myapplication.ui.theme.chonolulublue
 import com.example.myapplication.ui.theme.cyellow
 import com.example.myapplication.uistate.ProfileS
-import com.example.myapplication.uistate.TrxHistoryS
-import com.example.myapplication.viewmodels.EditPostVM
 import com.example.myapplication.viewmodels.ImageUpdateViewModel
+import com.example.myapplication.viewmodels.ProfileUpdateVM
 import com.example.myapplication.viewmodels.ProfileVM
-import com.example.myapplication.viewmodels.TrxHistoryVM
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.io.File
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 @Composable
-fun EditProfile( profileVM: ProfileVM= hiltViewModel()) {
+fun EditProfile(navController: NavController, profileVM: ProfileVM= hiltViewModel()) {
 
     val profileState = profileVM._getProfileStateFlow.collectAsState()
     Log.e("1111" , profileState.value.toString())
@@ -112,7 +66,7 @@ fun EditProfile( profileVM: ProfileVM= hiltViewModel()) {
             val profileStateData = (profileState.value as ProfileS.Loaded).data
 
 
-            EditProfileComponent()
+            EditProfileComponent(navController,profileStateData)
 
         }
 
@@ -125,23 +79,25 @@ fun EditProfile( profileVM: ProfileVM= hiltViewModel()) {
 
 @Composable
 fun EditProfileComponent(
-    imageUpdateViewModel: ImageUpdateViewModel= hiltViewModel(),
-    editPostVM: EditPostVM= hiltViewModel(),
+    navController: NavController,
+    data: ProfileM ,
+    imageUpdateViewModel: ImageUpdateViewModel = hiltViewModel() ,
+profileUpdateVM: ProfileUpdateVM= hiltViewModel()
+) {
 
-){
+    val profileUpdateVMState = profileUpdateVM._setProfileUpdateStateFlow.collectAsState()
+    Log.e("2222",profileUpdateVMState.value.toString())
 
-    val ctx = LocalContext.current
-    val stateUpdateImage = imageUpdateViewModel._getUserStateFlow.collectAsState()
-    var selectedImage by remember {
-        mutableStateOf<Uri?>(null)
-    }
-    var multifiles : MutableList<MultipartBody.Part> = remember {
-        mutableStateListOf()
-    }
-    val launcher = rememberLauncherForActivityResult(contract =
-     ActivityResultContracts.GetContent()) { uri: Uri? ->
-        selectedImage = uri
-     }
+    //===================*************+++++++++++++++++++++++
+    //data
+    var name by remember { mutableStateOf(TextFieldValue(data.data.Name)) }
+    var email by remember { mutableStateOf(TextFieldValue(data.data.MailID)) }
+    var organization by remember { mutableStateOf(TextFieldValue(data.data.Organization)) }
+    var profileTag by remember { mutableStateOf(TextFieldValue(data.data.ProfileTag)) }
+    var designation by remember { mutableStateOf(TextFieldValue(data.data.designation)) }
+    var dob by remember { mutableStateOf(TextFieldValue(data.data.Dobss)) }
+    var otherDetails by remember { mutableStateOf(TextFieldValue(data.data.Otherdetail)) }
+
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -165,60 +121,8 @@ fun EditProfileComponent(
                             ),
                             contentPadding = PaddingValues(),
                             onClick = {
-                                //ImageUpdate
-
-                                val path: File = Environment.getExternalStoragePublicDirectory(
-                                    Environment.DIRECTORY_PICTURES
-                                )
-                                val files = File(path, "2.jpg")
-
-                                try {
-                                    if (!path.isDirectory()) {
-                                        path.mkdirs()
-                                    }
-                                    files.createNewFile()
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                }
-
-                                files.outputStream().use {
-//                                          ctx.assets.open("image.jpg").copyTo(it)
-                                    ctx.contentResolver.openInputStream(selectedImage!!)?.copyTo(it)
-                                }
-
-
-                                ///
-                                val requestFile = files.asRequestBody("image/*".toMediaTypeOrNull())
-                                val file = MultipartBody.Part.createFormData("file", files.name, requestFile)
-
-                                multifiles.add(file)
-
-                                val myAddress =
-                                    "0x5Ac32b12daF2D5942403D3fc97f168Fa485C795C".toRequestBody("text/plain".toMediaTypeOrNull())
-                                val privateKey ="6a9cdaafc795b70dd6e700502de3d37d7dd77c1fb76198eff77a270d1c412a77".toRequestBody("text/plain".toMediaTypeOrNull())
-
-                                val type =
-                                    "1".toRequestBody("text/plain".toMediaTypeOrNull())
-                                val _hashtag =
-                                    "1dsd".toRequestBody("text/plain".toMediaTypeOrNull())
-                                val _content =
-                                    "165".toRequestBody("text/plain".toMediaTypeOrNull())
-                                val videoHash =
-                                    "0".toRequestBody("text/plain".toMediaTypeOrNull())
-
-                                imageUpdateViewModel.getImageUpdateCall(
-                                    multifiles,
-                                    myAddress,
-                                    privateKey,
-                                    type,
-                                    _content,
-                                    _hashtag,
-                                    videoHash
-                                )
-
-                                Log.e("1111",stateUpdateImage.value.toString())
-
-                            },
+               profileUpdateVM.setProfileUpdate(name.text,data.data.UserName,email.text,organization.text,profileTag.text,designation.text,dob.text,otherDetails.text,data.data.Profileimgg,data.data.backgroundimgg)
+                            }
                         )
                         {
                             Box(
@@ -245,63 +149,16 @@ fun EditProfileComponent(
 
                 }
 
-                ConstraintLayout(
-                ) {
-
-                    val camera = createRef()
-                    Box(modifier = Modifier
-                        .size(100.dp)
-                        .clip(CircleShape)
-                        .clickable {
-                            launcher.launch("image/*")
-                        }
-                     ) {
-                      if (selectedImage!=null) {
-                          Log.d("1111",selectedImage.toString())
-
-                          Image(painter = rememberAsyncImagePainter(selectedImage),
-                              contentDescription = "Profile",
-                              contentScale = ContentScale.Crop,
-                              modifier = Modifier
-                                  .fillMaxSize()
-                                  .clip(CircleShape))
-                      }
-                        else {
-                          Image(painter = painterResource(R.drawable.profile),
-                              contentDescription = "Profile",
-                              contentScale = ContentScale.Crop,
-                              modifier = Modifier
-                                  .fillMaxSize()
-                                  .clip(CircleShape))
-                      }
-                    }
-                    Box(modifier = Modifier
-                        .size(28.dp)
-                        .clip(CircleShape)
-                        .background(color = cgraystronglight)
-                        .constrainAs(camera) {
-                            end.linkTo(camera.end)
-                        }) {
-                        Image(painter = painterResource(R.drawable.ic_baseline_edit_24),
-                            contentDescription = "Camera",
-                            contentScale = ContentScale.FillWidth,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(4.dp)
-                                .clip(CircleShape))
-                    }
-
-
-                }
-
 
                 Column() {
                     Box(modifier = Modifier.height(50.dp))
                     Column() {
 
                         Text(text = "Name", color = cgraystronglight)
-                        BasicTextField(value = "Priyanka Jain",
-                            onValueChange = {},
+                        BasicTextField(value = name,
+                            onValueChange = {
+                                     name=it
+                            },
                             textStyle = TextStyle(fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp))
                     }
@@ -311,8 +168,10 @@ fun EditProfileComponent(
                     Box(modifier = Modifier.height(10.dp))
                     Column() {
                         Text(text = "Email", color = cgraylight)
-                        BasicTextField(value = "Priynka@gmail.com",
-                            onValueChange = {},
+                        BasicTextField(value = email,
+                            onValueChange = {
+                                email=it
+                            },
                             textStyle = TextStyle(fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp))
                     }
@@ -323,8 +182,10 @@ fun EditProfileComponent(
                     Column() {
 
                         Text(text = "Organization", color = cgraylight)
-                        BasicTextField(value = "CryptoxIN",
-                            onValueChange = {},
+                        BasicTextField(value = organization,
+                            onValueChange = {
+                                organization=it
+                            },
                             textStyle = TextStyle(fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp))
                     }
@@ -334,8 +195,10 @@ fun EditProfileComponent(
                     Box(modifier = Modifier.height(10.dp))
                     Column() {
                         Text(text = "Profile #Tag", color = cgraystronglight)
-                        BasicTextField(value = "Priyanka Jain",
-                            onValueChange = {},
+                        BasicTextField(value = profileTag,
+                            onValueChange = {
+                                profileTag=it
+                            },
                             textStyle = TextStyle(fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp))
                     }
@@ -345,26 +208,36 @@ fun EditProfileComponent(
                     Box(modifier = Modifier.height(10.dp))
                     Column() {
                         Text(text = "Designation", color = cgraystronglight)
-                        BasicTextField(value = "Kuchh nhi",
-                            onValueChange = {},
+                        BasicTextField(value = designation,
+                            onValueChange = {
+                                designation=it
+                            },
                             textStyle = TextStyle(fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp))
                     }
                     Divider(modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp))
                 }
+
                 Column() {
                     Box(modifier = Modifier.height(10.dp))
                     Column() {
-                        Text(text = "Gender", color = cgraylight)
-                        BasicTextField(value = "Female", onValueChange = {}, textStyle = TextStyle(fontWeight = FontWeight.Bold, fontSize = 16.sp))
+                        Text(text = "Date of Birth", color = cgraystronglight)
+                        BasicTextField(value = dob,       onValueChange = {
+                            dob=it
+                        }, textStyle = TextStyle(fontWeight = FontWeight.Bold, fontSize = 16.sp))
                     }
                     Divider(modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp))
                 }
                 Column() {
                     Box(modifier = Modifier.height(10.dp))
                     Column() {
-                        Text(text = "Date of Birth", color = cgraystronglight)
-                        BasicTextField(value = "10/08/1998", onValueChange = {}, textStyle = TextStyle(fontWeight = FontWeight.Bold, fontSize = 16.sp))
+                        Text(text = "Other details", color = cgraylight)
+                        BasicTextField(value = otherDetails,
+                            onValueChange = {
+                                otherDetails=it
+                            },
+                            textStyle = TextStyle(fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp))
                     }
                     Divider(modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp))
                 }

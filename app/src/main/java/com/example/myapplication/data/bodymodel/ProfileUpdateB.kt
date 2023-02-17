@@ -1,7 +1,7 @@
 package com.example.myapplication.data.bodymodel
 
 
-data class ProfileUpdateB(
+data class ProfileUpdateBody(
     val myAddress: String,
     val privateKey: String,
     val Name: String,

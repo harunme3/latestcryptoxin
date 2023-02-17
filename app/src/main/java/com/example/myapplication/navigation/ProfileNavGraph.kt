@@ -4,9 +4,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.example.myapplication.screenui.HomeScreen
 import com.example.myapplication.screenui.ProfileScreen
 import com.example.myapplication.screenui.profilescreen.EditProfile
+import com.example.myapplication.screenui.profilescreen.ProfileImageUpdateScreen
 
 
 fun NavGraphBuilder.profileNavGraph(navController: NavHostController){
@@ -20,7 +20,11 @@ fun NavGraphBuilder.profileNavGraph(navController: NavHostController){
         }
 
         composable(Screens.EditProfile.route){
-            EditProfile()
+            EditProfile(navController)
+        }
+
+        composable(Screens.ProfileImageUpdateScreen.route){
+           ProfileImageUpdateScreen(navController)
         }
 
     }

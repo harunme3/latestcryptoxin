@@ -6,33 +6,24 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.ClipboardManager
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.myapplication.data.bodymodel.ProfileUpdateB
-import com.example.myapplication.data.datasource.roomdata.WalletEntity
-import com.example.myapplication.navigation.Graph
 import com.example.myapplication.ui.theme.chonolulublue
 import com.example.myapplication.ui.theme.cwhite
-import com.example.myapplication.uistate.CommentsS
 import com.example.myapplication.uistate.CreateCommentS
-import com.example.myapplication.uistate.ProfileUpdateS
 import com.example.myapplication.viewmodels.CreateCommentVM
-import com.example.myapplication.viewmodels.ProfileUpdateVM
-import com.example.myapplication.viewmodels.WalletVM
-
-
 
 
 @Composable

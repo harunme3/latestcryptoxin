@@ -168,7 +168,9 @@ fun  ProfileScreenComponent(
                     start.linkTo(parent.start, 8.dp)
                     centerAround(image.bottom)
                 }
-                    .clip(CircleShape),
+                    .clip(CircleShape).clickable{
+                       navController.navigate(Screens.ProfileImageUpdateScreen.route)
+                    },
                 contentScale= ContentScale.Crop
             )
 

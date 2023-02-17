@@ -3,12 +3,15 @@ package com.example.myapplication.screenui.profilescreen
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,26 +22,52 @@ import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.myapplication.R
 import com.example.myapplication.data.models.followingm.Data
-import com.example.myapplication.ui.theme.cgraystronglight
-import com.example.myapplication.ui.theme.chonolulublue
-import com.example.myapplication.ui.theme.cwhite
-import com.example.myapplication.ui.theme.cyellow
+import com.example.myapplication.ui.theme.*
+import com.example.myapplication.uistate.FollowS
 import com.example.myapplication.uistate.FollowingS
+import com.example.myapplication.uistate.UnFollowS
 import com.example.myapplication.viewmodels.FollowingVM
+import com.example.myapplication.viewmodels.UnFollowVM
 
 
 @Composable
-fun FollowingScreen(navController: NavController ,followingVM: FollowingVM = hiltViewModel() ,){
+fun FollowingScreen(
+                     navController: NavController ,
+                    followingVM: FollowingVM = hiltViewModel(),
+                    unFollowVM: UnFollowVM= hiltViewModel()
+){
 
 
     val followingState = followingVM._getFollowingStateFlow.collectAsState()
     Log.e("1111",followingState.value.toString())
+
+
+    val unFollowState = unFollowVM._getUnFollowStateFlow.collectAsState()
+
+    val context=LocalContext.current
+    Log.e("1112", unFollowState.value.toString())
+
+    if(unFollowState.value is UnFollowS.Loaded)
+    {
+
+        LaunchedEffect(key1 = "key1" ){
+            Toast.makeText(context, "Followed", Toast.LENGTH_LONG).show()
+        }
+
+
+    }
+
+
+
+
+
     when (followingState.value) {
         is FollowingS.Empty -> {
             Column (modifier = Modifier.fillMaxSize(),
@@ -73,7 +102,9 @@ fun FollowingScreen(navController: NavController ,followingVM: FollowingVM = hil
                 LazyColumn(){
                     item {
                         data.forEachIndexed { index, it ->
-                            WalletCard2(it)
+                            FollowingCardComponent(it, modifier = Modifier.clickable {
+                                unFollowVM.getUnFollow(friendAddress = it.useraddress)
+                            })
                         }
                     }
                 }
@@ -91,23 +122,26 @@ fun FollowingScreen(navController: NavController ,followingVM: FollowingVM = hil
 
 
 
-@Composable
-fun WalletCard2(data: Data) {
 
+
+//----------------New card------------------------//
+
+
+@Composable
+fun FollowingCardComponent(data: Data,modifier: Modifier) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp)
             .padding(8.dp)
             .clip(RoundedCornerShape(16.dp)) ,
         elevation = 0.dp ,
-        backgroundColor = cgraystronglight
+        backgroundColor = cgraystrongest
     ) {
         Row(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 8.dp) ,
-            horizontalArrangement = Arrangement.SpaceBetween ,
+                .fillMaxWidth()
+                .padding(8.dp),
+
             verticalAlignment = Alignment.CenterVertically
         ) {
 
@@ -115,42 +149,75 @@ fun WalletCard2(data: Data) {
                 modifier = Modifier
                     .size(60.dp)
                     .clip(CircleShape) ,
-                painter = painterResource(id = R.drawable.cdarklogo) ,
+                painter = painterResource(id = R.drawable.dummyprofilephoto),
                 alignment = Alignment.CenterStart ,
                 contentDescription = "" ,
                 contentScale = ContentScale.Crop
             )
-
-            Column(
-                Modifier
-                    .weight(1f)
-            ) {
+            Spacer(modifier = Modifier.width(16.dp))
+            Column(modifier = Modifier.align(Alignment.CenterVertically)) {
                 Text(
-                    text = data.UserName,
-                    color = MaterialTheme.colors.surface ,
+                    text = data.Name ,
+                    modifier = Modifier.padding(0.dp , 0.dp , 12.dp , 0.dp) ,
+                    color = cwhite,
                     fontWeight = FontWeight.Bold ,
-                    style = MaterialTheme.typography.subtitle1
-                )
+                    style = MaterialTheme.typography.subtitle1,
+
+                    )
                 Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
-                    text =data.Name ,
+                    text ="@${data.UserName}",
                     modifier = Modifier.padding(0.dp , 0.dp , 12.dp , 0.dp) ,
                     color = cwhite ,
                     style = MaterialTheme.typography.caption
                 )
+                Spacer(modifier = Modifier.height(2.dp))
+
+                Text(
+                    text ="${data.designation}",
+                    modifier = Modifier.padding(0.dp , 0.dp , 12.dp , 0.dp) ,
+                    color = cwhite ,
+                    style = MaterialTheme.typography.caption
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+
+                Text(
+                    text ="${data.Organization}",
+                    modifier = Modifier.padding(0.dp , 0.dp , 12.dp , 0.dp) ,
+                    color = cwhite ,
+                    style = MaterialTheme.typography.caption
+                )
+
+
             }
+            Row(
+                modifier = Modifier.fillMaxSize() ,
+                horizontalArrangement = Arrangement.End ,
+                verticalAlignment = Alignment.CenterVertically
 
-
-
-
-            Icon(
-                painter = painterResource(id = R.drawable.ic_baseline_more_vert_24) ,
-                contentDescription = null ,
-                modifier = Modifier.size(24.dp) ,
-                tint = Color.Red
-            )
+            ) {
+                FollowingCardChipView(text = "Following" , colorResource = chonolulublue, modifier = modifier)
+            }
         }
     }
 }
 
+
+@Composable
+fun FollowingCardChipView(text: String , colorResource: Color,modifier: Modifier) {
+    Box(
+        modifier = modifier
+            .wrapContentWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(
+                color = cwhite
+            )
+    ) {
+        Text(
+            text = text , modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp) ,
+            style = TextStyle(fontWeight = FontWeight.Bold) ,
+            color = colorResource
+        )
+    }
+}

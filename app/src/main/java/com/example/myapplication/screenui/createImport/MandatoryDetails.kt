@@ -23,10 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.myapplication.data.bodymodel.ProfileUpdateB
+import com.example.myapplication.data.bodymodel.ProfileUpdateBody
 import com.example.myapplication.data.datasource.roomdata.WalletEntity
 import com.example.myapplication.navigation.Graph
-import com.example.myapplication.navigation.Screens
 import com.example.myapplication.ui.theme.chonolulublue
 import com.example.myapplication.ui.theme.cwhite
 import com.example.myapplication.uistate.ProfileUpdateS
@@ -88,21 +87,20 @@ fun MandatoryDetails(
 
         Button(
             onClick = {
-                profileUpdateVM.setProfileUpdate(profileUpdateB = ProfileUpdateB(
-                    myAddress = address ,
-                    privateKey = privateKey ,
-                    Name = name,
-                    UserName = username ,
-                    Organization = "" ,
-                    designation = "" ,
-                    Dob = "" ,
-                    ProfileTag = "" ,
-                    MailID = "" ,
-                    Otherdetail = "" ,
-                    Profileimgg = "" ,
-                    backgroundimgg = "" ,
 
-                ))
+
+                profileUpdateVM.setProfileUpdate(
+                    name = name ,
+                    UserName =username ,
+                    email = "" ,
+                    organization = "" ,
+                    profileTag = "" ,
+                    designation = "" ,
+                    dob = "" ,
+                    otherDetails = "" ,
+                    Profileimgg = "" ,
+                    backgroundimgg = ""
+                )
 
 
             },

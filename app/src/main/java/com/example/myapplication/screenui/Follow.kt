@@ -21,15 +21,13 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myapplication.R
 import com.example.myapplication.data.models.alluserm.Data
-import com.example.myapplication.ui.theme.chonolulublue
-import com.example.myapplication.ui.theme.credstronglight
-import com.example.myapplication.ui.theme.cwhite
-import com.example.myapplication.ui.theme.cyellow
+import com.example.myapplication.ui.theme.*
 import com.example.myapplication.uistate.AllUserS
 import com.example.myapplication.uistate.FollowS
 import com.example.myapplication.uistate.ImportWalletState
@@ -38,12 +36,12 @@ import com.example.myapplication.viewmodels.FollowVM
 
 
 @Composable
-fun FollowScreen(allUserVM: AllUserVM = hiltViewModel() , followVM: FollowVM = hiltViewModel()) {
+fun FollowScreen(allUserVM: AllUserVM = hiltViewModel() ,followVM: FollowVM = hiltViewModel()) {
 
     val allUserState = allUserVM._getAllUserStateFlow.collectAsState()
     val followstate = followVM._getFollowStateFlow.collectAsState()
 
-       val context=LocalContext.current;
+       val context=LocalContext.current
     Log.e("1112", followstate.value.toString())
 
     if(followstate.value is FollowS.Loaded)
@@ -115,69 +113,66 @@ fun FollowScreen(allUserVM: AllUserVM = hiltViewModel() , followVM: FollowVM = h
 @Composable
 fun FollowCard(data: Data ,modifier: Modifier) {
     Card(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clip(RoundedCornerShape(16.dp))
-          ,
+            .clip(RoundedCornerShape(16.dp)) ,
         elevation = 0.dp ,
-        backgroundColor = cyellow
+        backgroundColor = cgraystrongest
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(8.dp),
+
+            verticalAlignment = Alignment.CenterVertically
         ) {
 
-            val image: Painter = painterResource(id = R.drawable.dummyprofilephoto)
             Image(
                 modifier = Modifier
                     .size(60.dp)
                     .clip(CircleShape) ,
-                painter = image ,
+                painter = painterResource(id = R.drawable.dummyprofilephoto),
                 alignment = Alignment.CenterStart ,
                 contentDescription = "" ,
                 contentScale = ContentScale.Crop
             )
-
             Spacer(modifier = Modifier.width(16.dp))
-
             Column(modifier = Modifier.align(Alignment.CenterVertically)) {
                 Text(
                     text = data.Name ,
                     modifier = Modifier.padding(0.dp , 0.dp , 12.dp , 0.dp) ,
-                    color = MaterialTheme.colors.surface ,
+                    color = cwhite,
                     fontWeight = FontWeight.Bold ,
-                    style = MaterialTheme.typography.subtitle1
+                    style = MaterialTheme.typography.subtitle1,
+
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
-                    text = data.UserName ,
+                    text ="@${data.UserName}",
+                    modifier = Modifier.padding(0.dp , 0.dp , 12.dp , 0.dp) ,
+                    color = cwhite ,
+                    style = MaterialTheme.typography.caption
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+
+                Text(
+                    text ="${data.designation}",
+                    modifier = Modifier.padding(0.dp , 0.dp , 12.dp , 0.dp) ,
+                    color = cwhite ,
+                    style = MaterialTheme.typography.caption
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+
+                Text(
+                    text ="${data.Organization}",
                     modifier = Modifier.padding(0.dp , 0.dp , 12.dp , 0.dp) ,
                     color = cwhite ,
                     style = MaterialTheme.typography.caption
                 )
 
-                Row(verticalAlignment = Alignment.Bottom) {
 
-                    val location: Painter = painterResource(id = R.drawable.home)
-
-                    Icon(
-                        painter = location ,
-                        contentDescription = null ,
-                        modifier = Modifier.size(16.dp , 16.dp) ,
-                        tint = Color.Red
-                    )
-
-                    Text(
-                        text = data.designation ,
-                        modifier = Modifier.padding(8.dp , 12.dp , 12.dp , 0.dp) ,
-                        color = MaterialTheme.colors.surface ,
-                        style = MaterialTheme.typography.caption
-
-                    )
-                }
             }
             Row(
                 modifier = Modifier.fillMaxSize() ,
@@ -185,7 +180,7 @@ fun FollowCard(data: Data ,modifier: Modifier) {
                 verticalAlignment = Alignment.CenterVertically
 
             ) {
-                ChipView(text = "Follow" , colorResource = chonolulublue)
+                ChipView(text = "Follow" , colorResource = chonolulublue, modifier = modifier)
             }
         }
     }
@@ -193,18 +188,18 @@ fun FollowCard(data: Data ,modifier: Modifier) {
 
 
 @Composable
-fun ChipView(text: String , colorResource: Color) {
+fun ChipView(text: String , colorResource: Color,modifier: Modifier) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .wrapContentWidth()
             .clip(RoundedCornerShape(12.dp))
             .background(
-                colorResource.copy(.08f)
+               color = cwhite
             )
     ) {
         Text(
-            text = text , modifier = Modifier.padding(12.dp , 6.dp , 12.dp , 6.dp) ,
-            style = MaterialTheme.typography.caption ,
+            text = text , modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp) ,
+            style = TextStyle(fontWeight = FontWeight.Bold) ,
             color = colorResource
         )
     }

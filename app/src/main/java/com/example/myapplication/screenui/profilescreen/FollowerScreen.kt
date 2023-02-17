@@ -25,10 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.myapplication.R
 import com.example.myapplication.data.models.followerm.Data
-import com.example.myapplication.ui.theme.cgraystronglight
-import com.example.myapplication.ui.theme.chonolulublue
-import com.example.myapplication.ui.theme.cwhite
-import com.example.myapplication.ui.theme.cyellow
+import com.example.myapplication.ui.theme.*
 import com.example.myapplication.uistate.FollowerS
 import com.example.myapplication.viewmodels.FollowerVM
 
@@ -102,7 +99,7 @@ fun WalletCard1(data: Data) {
             .padding(8.dp)
             .clip(RoundedCornerShape(16.dp)) ,
         elevation = 0.dp ,
-        backgroundColor = cgraystronglight
+        backgroundColor = cgraystrongest
     ) {
         Row(
             modifier = Modifier
@@ -144,13 +141,6 @@ fun WalletCard1(data: Data) {
 
 
 
-
-            Icon(
-                painter = painterResource(id = R.drawable.ic_baseline_more_vert_24) ,
-                contentDescription = null ,
-                modifier = Modifier.size(24.dp) ,
-                tint = Color.Red
-            )
         }
     }
 }
