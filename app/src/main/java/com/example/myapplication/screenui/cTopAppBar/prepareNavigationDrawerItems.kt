@@ -18,35 +18,11 @@ import com.example.myapplication.R
     itemsList.add(
         NavigationDrawerItem(
             image = painterResource(id = R.drawable.comment),
-            label = "Daily Check-IN",
+            label = "Rewards",
             showUnreadBubble = true
         )
     )
-    itemsList.add(
-        NavigationDrawerItem(
-            image = painterResource(id = R.drawable.home),
-            label = "Notifications",
-            showUnreadBubble = true
-        )
-    )
-    itemsList.add(
-        NavigationDrawerItem(
-            image = painterResource(id = R.drawable.wallet),
-            label = "Profile"
-        )
-    )
-    itemsList.add(
-        NavigationDrawerItem(
-            image = painterResource(id = R.drawable.tox),
-            label = "Payments"
-        )
-    )
-    itemsList.add(
-        NavigationDrawerItem(
-            image = painterResource(id = R.drawable.profile),
-            label = "Settings"
-        )
-    )
+
 
 
     return itemsList

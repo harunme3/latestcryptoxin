@@ -1,5 +1,6 @@
 package com.example.myapplication.screenui.dailycheckin
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -272,13 +273,16 @@ fun DailyCheckInDashboardComponent(
     commentRewardSumData: CommentRewardSumM ,
     bonusRewardData: BonusRewardM ,
     referralHistoryData: ReferralHistoryM ,
-    walletData: WalletEntity
+    walletData: WalletEntity,
+    dailyCheckInClaimVM: DailyCheckInClaimVM= hiltViewModel()
 ) {
+    val dailyCheckInClaimState = dailyCheckInClaimVM._getDailyCheckInClaimStateFlow.collectAsState()
+    Log.d("3333",dailyCheckInClaimState.value.toString())
     Column {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(320.dp)
+                .height(240.dp)
                 .padding(8.dp)
                 .clip(
                     shape = RoundedCornerShape(
@@ -299,7 +303,7 @@ fun DailyCheckInDashboardComponent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(4.dp)
-                        .height(240.dp)
+                        .height(160.dp)
                         .clip(
                             shape = RoundedCornerShape(
                                 topStart = 24.dp ,
@@ -361,18 +365,27 @@ fun DailyCheckInDashboardComponent(
                 ) {
 
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(80.dp) ,
-                        horizontalArrangement = Arrangement.Center ,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                    Column {
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(80.dp) ,
+                            horizontalArrangement = Arrangement.Center ,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
 
 
-                        OutlinedButton(onClick = { /*TODO*/ }) {
-                            Text("Affiliate Pattern")
+                       Text(text = "App Check-IN Bonus = 5 CIN", color = cwhite)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            OutlinedButton(onClick = {
+                                dailyCheckInClaimVM.getDailyCheckInClaim()
+
+                            }) {
+                                Text("Claim")
+                            }
                         }
+
                     }
                 }
             }
@@ -508,15 +521,11 @@ fun DailyCheckInDashboardTabsContent(pagerState: PagerState) {
         when (page) {
             // on below line we are calling tab content screen
             // and specifying data as Home Screen.
-            0 -> TransactionHistoryScreen()
+            0 -> BonusRewardScreen()
             // on below line we are calling tab content screen
             // and specifying data as Shopping Screen.
             1 -> PostRewardScreen()
-            // on below line we are calling tab content screen
-            // and specifying data as Settings Screen.
-            2 -> LikeRewardScreen()
 
-            3 -> CommentRewardScreen()
         }
     }
 }

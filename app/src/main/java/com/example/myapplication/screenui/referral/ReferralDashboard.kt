@@ -45,7 +45,7 @@ fun ReferralDashboard(
     referralRewardVM: ReferralRewardVM = hiltViewModel() ,
     totalReferralCountVM: TotalReferralCountVM = hiltViewModel() ,
     directReferralCountVM: DirectReferralCountVM = hiltViewModel() ,
-  fiftyLevelRewardVM: FiftyLevelRewardVM = hiltViewModel() ,
+    fiftyLevelRewardVM: FiftyLevelRewardVM = hiltViewModel() ,
     referralHistoryVM: ReferralHistoryVM = hiltViewModel(),
     walletVM: WalletVM= hiltViewModel()
 
@@ -524,15 +524,14 @@ fun ReferralDashboardContent(pagerState: PagerState) {
         when (page) {
             // on below line we are calling tab content screen
             // and specifying data as Home Screen.
-            0 -> TransactionHistoryScreen()
+            0 -> DirectRewardScreen()
             // on below line we are calling tab content screen
             // and specifying data as Shopping Screen.
-            1 -> PostRewardScreen()
+            1 -> AffiliateRewardScreen()
             // on below line we are calling tab content screen
             // and specifying data as Settings Screen.
-            2 -> LikeRewardScreen()
+            2 -> HoldingRewardScreen()
 
-            3 -> CommentRewardScreen()
         }
     }
 }
