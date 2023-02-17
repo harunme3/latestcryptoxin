@@ -1,5 +1,4 @@
-package com.example.myapplication.screenui
-
+package com.example.myapplication.screenui.homeui
 
 import android.util.Log
 import android.widget.Toast
@@ -8,11 +7,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -24,39 +25,37 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.R
-import com.example.myapplication.data.models.allpostm.Data
-import com.example.myapplication.navigation.Graph
+import com.example.myapplication.data.models.commentsm.CommentsM
+import com.example.myapplication.data.models.specificpostm.SpecificPostM
+import com.example.myapplication.data.models.userpostm.Data
 import com.example.myapplication.navigation.Screens
-import com.example.myapplication.screenui.cTopAppBar.CTopAppBar
-import com.example.myapplication.screenui.cTopAppBar.CustomShape
-import com.example.myapplication.screenui.cTopAppBar.DrawerContent
-import com.example.myapplication.ui.theme.cblack
-import com.example.myapplication.ui.theme.cgraystrongest
-import com.example.myapplication.ui.theme.chonolulublue
-import com.example.myapplication.ui.theme.cyellow
-import com.example.myapplication.uistate.AllPostS
-import com.example.myapplication.viewmodels.AllPostVM
-import com.example.myapplication.viewmodels.DeletePostVM
-import com.example.myapplication.viewmodels.LikePostVM
+import com.example.myapplication.screenui.AllPostCard
+import com.example.myapplication.ui.theme.*
+import com.example.myapplication.uistate.CommentsS
+import com.example.myapplication.uistate.SpecificPostS
+import com.example.myapplication.viewmodels.*
 import com.halilibo.richtext.markdown.Markdown
 import com.halilibo.richtext.ui.RichText
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+
 
 @Composable
-fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel(),deletePostVM: DeletePostVM= hiltViewModel(),likePostVM: LikePostVM= hiltViewModel()) {
-    val scaffoldState = rememberScaffoldState()
-    val coroutineScope = rememberCoroutineScope()
-    val allPostState = allPostVM._getAllPostStateFlow.collectAsState()
-    val deletePostState = deletePostVM._getDeletePostStateFlow.collectAsState()
-    val likePostState = likePostVM._getLikePostStateFlow.collectAsState()
-    Log.e("1111",likePostState.value.toString())
+fun ViewPostScreen(navController:NavController , postId: String, specificPostVM: SpecificPostVM = hiltViewModel() , commentsVM: CommentsVM = hiltViewModel() , createCommentVM: CreateCommentVM = hiltViewModel()) {
 
-    when (allPostState.value) {
-        is AllPostS.Empty -> {
+
+      LaunchedEffect(key1 = "key1" ){
+          Log.e("2222",postId)
+          specificPostVM.getSpecificPost(postId=postId)
+          commentsVM.getComments(postId=postId)
+      }
+    val specificPostState = specificPostVM._getSpecificPostStateFlow.collectAsState()
+    val commentsState = commentsVM._getCommentsStateFlow.collectAsState()
+    Log.e("2222",specificPostState.value.toString())
+    Log.e("2222",commentsState.value.toString())
+
+    when (specificPostState.value) {
+        is SpecificPostS.Empty -> {
             Column (modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally){
@@ -67,7 +66,7 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
                 )
             }
         }
-        is AllPostS.Loading -> {
+        is SpecificPostS.Loading -> {
             Column (modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally){
@@ -77,58 +76,59 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
                 )
             }
         }
-        is AllPostS.Error -> Text(text = "error")
-        is AllPostS.Loaded -> {
-            val context= LocalContext.current
-            val clipboardManager: ClipboardManager = LocalClipboardManager.current
-            val data=(allPostState.value as AllPostS.Loaded).data.data
+        is SpecificPostS.Error -> Text(text = "error")
+        is SpecificPostS.Loaded -> {
 
 
-            Scaffold(  modifier = Modifier.fillMaxSize(),
-                scaffoldState = scaffoldState,
-                topBar = {
-                    CTopAppBar(title = "CryptoxIN", modifier = Modifier) {
-                        coroutineScope.launch {
-                            scaffoldState.drawerState.open()
-                        }
-                    }
-                },
-                drawerContent = {
-                    DrawerContent {
-                        coroutineScope.launch {
-                            // delay for the ripple effect
-                            delay(timeMillis = 250)
-                            scaffoldState.drawerState.close()
 
-                            if (it=="Referral"){
-                                Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
-                                navController.popBackStack()
-                                navController.navigate(Graph.REFERRAL)
-                            }
 
-                            if (it=="Daily Check-IN"){
-                                Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
-                                navController.popBackStack()
-                                navController.navigate(Graph.DAILY_CHECK_IN)
-                            }
+            when (commentsState.value) {
+                is CommentsS.Empty -> {
+                    Column (modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally){
+                        CircularProgressIndicator(
+                            modifier = Modifier.then(Modifier.size(32.dp)),
+                            color = cyellow
 
-                        }
-                    }
-                },
-                drawerShape = CustomShape(220.dp, 0f)
-                ) {
-                LazyColumn(modifier = Modifier.padding(it)) {
-                    item {
-                        data.forEachIndexed { index , it ->
-                            AllPostCard(
-                                  it,
-                                deletePostVM,
-                                likePostVM,
-                             navController
-                            )
-                        }
+                        )
                     }
                 }
+                is CommentsS.Loading -> {
+                    Column (modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally){
+                        CircularProgressIndicator(
+                            modifier = Modifier.then(Modifier.size(64.dp)),
+                            color = chonolulublue
+                        )
+                    }
+                }
+                is CommentsS.Error -> Text(text = "error")
+                is CommentsS.Loaded -> {
+                    val context= LocalContext.current
+                    val clipboardManager: ClipboardManager = LocalClipboardManager.current
+
+                    val specificPostData=(specificPostState.value as SpecificPostS.Loaded).data
+                    val commentsData=(commentsState.value as CommentsS.Loaded).data.data
+
+
+              
+                    LazyColumn() {
+
+                        item {
+                            ViewPostCard(specificPostData)
+                        }
+                        item {
+                            (1..20).forEachIndexed { index , it ->
+                              ViewPostScreenCard(it)
+                            }
+                        }
+                    }
+
+                }
+
+
             }
 
 
@@ -141,34 +141,24 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
 }
 
 
+@Composable
+fun ViewPostCard(
+    specificPostData: SpecificPostM,
+    deletePostVM: DeletePostVM= hiltViewModel(),
+    likePostVM: LikePostVM= hiltViewModel()
+) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @Composable
-    fun AllPostCard(data: Data , deletePostVM: DeletePostVM , likePostVM: LikePostVM,navController: NavController) {
-
-        val contextForToast = LocalContext.current.applicationContext
-        val listItems = listOf<String>("Edit", "Delete","Report")
-        val disabledItem = 2
-        var expanded by remember {
-            mutableStateOf(false)
-        }
+    val contextForToast = LocalContext.current.applicationContext
+    val listItems = listOf<String>("Edit", "Delete","Report")
+    val disabledItem = 2
+    var expanded by remember {
+        mutableStateOf(false)
+    }
 
     Card(
         modifier = Modifier
             .fillMaxWidth(),
-             elevation = 0.dp,
+        elevation = 0.dp,
     ) {
         Column() {
             Divider(modifier = Modifier
@@ -180,7 +170,7 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
                     modifier = Modifier
                         .size(60.dp)
                         .clip(CircleShape),
-                    painter = rememberAsyncImagePainter(model = data.imgHash),
+                    painter = rememberAsyncImagePainter(model = specificPostData.data[0].imgHash) ,
                     alignment = Alignment.CenterStart,
                     contentDescription = "",
                     contentScale = ContentScale.Crop
@@ -200,7 +190,7 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
                         ) {
                             Row {
                                 Text(
-                                    text = data.Name,
+                                    text = specificPostData.data[0].Name,
                                     color = cblack,
                                     style = TextStyle(
                                         fontSize = 16.sp,
@@ -208,8 +198,8 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
                                     )
                                 )
                                 Text(
-                                    text = data.usernames,
-                                    color = cgraystrongest,
+                                    text = specificPostData.data[0].username,
+                                    color = cgraystrongest ,
                                     style = TextStyle(
                                         fontSize = 16.sp,
                                     )
@@ -218,7 +208,7 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
 
                             Text(
                                 text = ". 24d",
-                                color = cgraystrongest,
+                                color = cgraystrongest ,
                                 style = TextStyle(
                                     fontSize = 16.sp,
                                 )
@@ -250,18 +240,18 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
                                             Toast.makeText(contextForToast, itemValue, Toast.LENGTH_SHORT)
                                                 .show()
 
-                                                if (itemIndex==0){
-                                                    //edit post
-                                                }
+                                            if (itemIndex==0){
+                                                //edit post
+                                            }
 
-                                                if (itemIndex==1){
-                                                    //delete
-                                                    deletePostVM.getDeletePost(postId = data.allpstId)
-                                                }
+                                            if (itemIndex==1){
+                                                //delete
+                                                deletePostVM.getDeletePost(postId = specificPostData.data[0].pstId)
+                                            }
 
-                                                if (itemIndex==2){
-                                                    //report post
-                                                }
+                                            if (itemIndex==2){
+                                                //report post
+                                            }
 
                                             expanded = false
                                         },
@@ -275,16 +265,14 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
                     }
 
 
-                    Box(modifier = Modifier.clickable {
-                        navController.navigate(Screens.ViewPostScreen.route+"/${data.allpstId}")
-                    }) {
+                    Box() {
 
                         RichText(
                             modifier = Modifier.padding(16.dp),
 
-                        ) {
+                            ) {
                             Markdown(
-                                content=data.content,
+                                content=specificPostData.data[0].content,
                             )
                         }
 
@@ -294,7 +282,7 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp),
-                        painter = rememberAsyncImagePainter(model = data.imgHash),
+                        painter = rememberAsyncImagePainter(model = specificPostData.data[0].imgHash) ,
                         alignment = Alignment.CenterStart,
                         contentDescription = "",
                         contentScale = ContentScale.Crop
@@ -310,11 +298,7 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
                                 contentDescription = null ,
                                 modifier = Modifier
                                     .size(24.dp)
-                                    .padding(start = 8.dp).clickable {
-
-                                            navController.navigate(Screens.CreateCommentScreen.route+"/${data.allpstId}")
-
-                                    } ,
+                                    .padding(start = 8.dp) ,
 
                                 )
                             Row {
@@ -343,15 +327,15 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
                                     .padding(start = 8.dp)
                                     .clickable {
                                         Log.d("1111" , "like call")
-                                        likePostVM.getLikePost(postId = data.allpstId)
+                                        likePostVM.getLikePost(postId = specificPostData.data[0].pstId)
                                     } ,
 
                                 )
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text(text = data.likeCount)
+                            Text(text = specificPostData.data[0].likeCount)
                         }
                         Icon(
-                            painter = painterResource(id = R.drawable.views),
+                            painter = painterResource(id = R.drawable.views) ,
                             contentDescription = null,
                             modifier = Modifier
                                 .size(24.dp)
@@ -383,3 +367,69 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
 
 }
 
+
+@Composable
+fun ViewPostScreenCard(any: Any) {
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .padding(8.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .clickable(onClick = {
+                //cin scan url
+            }) ,
+        elevation = 0.dp ,
+        backgroundColor = cgraystronglight
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 8.dp) ,
+            horizontalArrangement = Arrangement.SpaceBetween ,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Image(
+                modifier = Modifier
+                    .size(60.dp)
+                    .clip(CircleShape) ,
+                painter = painterResource(id = R.drawable.cdarklogo) ,
+                alignment = Alignment.CenterStart ,
+                contentDescription = "" ,
+                contentScale = ContentScale.Crop
+            )
+
+            Column(
+                Modifier
+                    .weight(1f)
+            ) {
+                Text(
+                    text = "2" ,
+                    color = MaterialTheme.colors.surface ,
+                    fontWeight = FontWeight.Bold ,
+                    style = MaterialTheme.typography.subtitle1
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+
+                Text(
+                    text = "walletEntity.address" ,
+                    modifier = Modifier.padding(0.dp , 0.dp , 12.dp , 0.dp) ,
+                    color = cwhite ,
+                    style = MaterialTheme.typography.caption
+                )
+            }
+
+
+
+
+            Icon(
+                painter = painterResource(id = R.drawable.ic_baseline_more_vert_24) ,
+                contentDescription = null ,
+                modifier = Modifier.size(24.dp) ,
+                tint = Color.Red
+            )
+        }
+    }
+}

@@ -22,6 +22,7 @@ import androidx.navigation.NavController
 import com.example.myapplication.data.datasource.roomdata.WalletEntity
 import com.example.myapplication.data.models.bonusrewardm.BonusRewardM
 import com.example.myapplication.data.models.directreferralcountm.DirectReferralCountM
+import com.example.myapplication.data.models.fiftylevelrewardm.FiftyLevelRewardM
 import com.example.myapplication.data.models.referralhistory.ReferralHistoryM
 import com.example.myapplication.data.models.referralrewardm.ReferralRewardM
 import com.example.myapplication.data.models.totalreferralcountm.TotalReferralCountM
@@ -44,7 +45,7 @@ fun ReferralDashboard(
     referralRewardVM: ReferralRewardVM = hiltViewModel() ,
     totalReferralCountVM: TotalReferralCountVM = hiltViewModel() ,
     directReferralCountVM: DirectReferralCountVM = hiltViewModel() ,
-    bonusRewardVM: BonusRewardVM = hiltViewModel() ,
+  fiftyLevelRewardVM: FiftyLevelRewardVM = hiltViewModel() ,
     referralHistoryVM: ReferralHistoryVM = hiltViewModel(),
     walletVM: WalletVM= hiltViewModel()
 
@@ -58,7 +59,7 @@ fun ReferralDashboard(
     }
     val walletState =
         walletVM._getWalletStateFlow.collectAsState()
-    val bonusRewardState = bonusRewardVM._getBonusRewardStateFlow.collectAsState()
+    val fiftyLevelRewardState = fiftyLevelRewardVM._getFiftyLevelRewardStateFlow.collectAsState()
     val referralHistoryState = referralHistoryVM._getReferralHistoryStateFlow.collectAsState()
     val referralRewardState = referralRewardVM._getReferralRewardStateFlow.collectAsState()
     val totalReferralCountState =
@@ -153,8 +154,8 @@ fun ReferralDashboard(
                         is DirectReferralCountS.Loaded -> {
 
 
-                            when (bonusRewardState.value) {
-                                is BonusRewardS.Empty -> {
+                            when (fiftyLevelRewardState.value) {
+                                is FiftyLevelRewardS.Empty -> {
                                     Column(
                                         modifier = Modifier.fillMaxSize() ,
                                         verticalArrangement = Arrangement.Center ,
@@ -167,7 +168,7 @@ fun ReferralDashboard(
                                         )
                                     }
                                 }
-                                is BonusRewardS.Loading -> {
+                                is FiftyLevelRewardS.Loading -> {
                                     Column(
                                         modifier = Modifier.fillMaxSize() ,
                                         verticalArrangement = Arrangement.Center ,
@@ -179,8 +180,8 @@ fun ReferralDashboard(
                                         )
                                     }
                                 }
-                                is BonusRewardS.Error -> Text(text = "error")
-                                is BonusRewardS.Loaded -> {
+                                is FiftyLevelRewardS.Error -> Text(text = "error")
+                                is FiftyLevelRewardS.Loaded -> {
 
 
                                     when (referralHistoryState.value) {
@@ -219,8 +220,8 @@ fun ReferralDashboard(
                                                 (totalReferralCountState.value as TotalReferralCountS.Loaded).data
                                             val directReferralCountData =
                                                 (directReferralCountState.value as DirectReferralCountS.Loaded).data
-                                            val bonusRewardData =
-                                                (bonusRewardState.value as BonusRewardS.Loaded).data
+                                            val fiftyLevelRewardData =
+                                                (fiftyLevelRewardState.value as FiftyLevelRewardS.Loaded).data
                                             val referralHistoryData =
                                                 (referralHistoryState.value as ReferralHistoryS.Loaded).data
                                             val walletData =
@@ -229,7 +230,7 @@ fun ReferralDashboard(
                                                 referralRewardData ,
                                                 totalReferralCountData ,
                                                 directReferralCountData,
-                                                bonusRewardData,
+                                                fiftyLevelRewardData,
                                                 referralHistoryData,
                                                 walletData
                                             )
@@ -270,7 +271,7 @@ fun ReferralDashboardComponent(
     referralRewardData: ReferralRewardM ,
     totalReferralCountData: TotalReferralCountM ,
     directReferralCountData: DirectReferralCountM ,
-    bonusRewardData: BonusRewardM ,
+    fiftyLevelRewardData: FiftyLevelRewardM ,
     referralHistoryData: ReferralHistoryM ,
     walletData: WalletEntity ,
 
@@ -394,7 +395,7 @@ fun ReferralDashboardComponent(
 
         }
 
-        WalletTabLayout()
+        ReferralDashboardTabLayout()
     }
 }
 
@@ -404,7 +405,7 @@ fun ReferralDashboardComponent(
 
 @ExperimentalPagerApi
 @Composable
-fun WalletTabLayout() {
+fun ReferralDashboardTabLayout() {
 
     // on below line we are creating variable for pager state.
     val pagerState = rememberPagerState(pageCount = 4)
@@ -418,10 +419,10 @@ fun WalletTabLayout() {
         // and specifying background color for it.
 
         // on below line we are calling tabs
-        WalletTabs(pagerState = pagerState)
+        ReferralDashboardTabs(pagerState = pagerState)
         // on below line we are calling tabs content
         // for displaying our page for each tab layout
-        WalletTabsContent(pagerState = pagerState)
+        ReferralDashboardContent(pagerState = pagerState)
     }
 }
 
@@ -429,7 +430,7 @@ fun WalletTabLayout() {
 // creating a function for tabs
 @ExperimentalPagerApi
 @Composable
-fun WalletTabs(pagerState: PagerState) {
+fun ReferralDashboardTabs(pagerState: PagerState) {
     // in this function we are creating a list
     // in this list we are specifying data as
     // name of the tab and the icon for it.
@@ -513,7 +514,7 @@ fun WalletTabs(pagerState: PagerState) {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun WalletTabsContent(pagerState: PagerState) {
+fun ReferralDashboardContent(pagerState: PagerState) {
     // on below line we are creating
     // horizontal pager for our tab layout.
     HorizontalPager(state = pagerState) {

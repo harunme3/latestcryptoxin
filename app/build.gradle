@@ -134,6 +134,9 @@ dependencies {
     //tree
     implementation("io.github.mr0xf00:lazytreelist:0.1.0")
 
+    //admob
+ //   implementation 'com.google.android.gms:play-services-ads:21.5.0'
+
 
 
 

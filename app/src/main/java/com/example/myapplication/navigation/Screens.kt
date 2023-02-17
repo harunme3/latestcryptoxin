@@ -20,4 +20,7 @@ sealed class Screens(val route:String){
     object FollowingScreen:Screens("followingScreen_route")
     object ReferralDashboardScreen:Screens("referralDashboardScreen_route")
     object DailyCheckInDashboardScreen:Screens("DailyCheckInDashboardScreen_route")
+    object CreateCommentScreen:Screens("createCommentScreen_route")
+    object ViewPostDetailsScreen:Screens("viewPostDetailsScreen_route")
+    object ViewPostScreen:Screens("viewPostScreen_route")
 }

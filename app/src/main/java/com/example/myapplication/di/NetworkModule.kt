@@ -193,6 +193,13 @@ class NetworkModule {
         return  retrofitBuilder.client(okHttpClient).build().create(FollowI::class.java)
     }
 
+
+    @Singleton
+    @Provides
+    fun provideUnFollow(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):UnFollowI {
+        return  retrofitBuilder.client(okHttpClient).build().create(UnFollowI::class.java)
+    }
+
     @Singleton
     @Provides
     fun provideEditPost(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):EditPostI {
@@ -201,8 +208,42 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideUnFollow(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):UnFollowI {
-        return  retrofitBuilder.client(okHttpClient).build().create(UnFollowI::class.java)
+    fun provideFiftyLevelReward(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):FiftyLevelRewardI {
+        return  retrofitBuilder.client(okHttpClient).build().create(FiftyLevelRewardI::class.java)
+    }
+
+
+    @Singleton
+    @Provides
+    fun provideBonusTime(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):BonusTimeI {
+        return  retrofitBuilder.client(okHttpClient).build().create(BonusTimeI::class.java)
+    }
+
+
+    @Singleton
+    @Provides
+    fun provideDailyCheckInClaim(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):DailyCheckInClaimI {
+        return  retrofitBuilder.client(okHttpClient).build().create(DailyCheckInClaimI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideCreateCommentI(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):CreateCommentI {
+        return  retrofitBuilder.client(okHttpClient).build().create(CreateCommentI::class.java)
+    }
+
+
+    @Singleton
+    @Provides
+    fun provideCommentsI(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):CommentsI {
+        return  retrofitBuilder.client(okHttpClient).build().create(CommentsI::class.java)
+    }
+
+
+    @Singleton
+    @Provides
+    fun provideSpecificPostI(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):SpecificPostI {
+        return  retrofitBuilder.client(okHttpClient).build().create(SpecificPostI::class.java)
     }
 
 
