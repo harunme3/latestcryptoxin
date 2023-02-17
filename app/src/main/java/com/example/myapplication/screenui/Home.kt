@@ -320,7 +320,7 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
                             Row {
                                 Spacer(modifier = Modifier.width(4.dp))
                             }
-                            Text("5")
+                            Text(text = data.CommentCount)
                         }
                         Row {
                             Icon(
@@ -332,7 +332,7 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
 
                                 )
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("5")
+                            Text(text = data.reportCount)
                         }
                         Row {
                             Icon(
@@ -351,26 +351,13 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
                             Text(text = data.likeCount)
                         }
                         Icon(
-                            painter = painterResource(id = R.drawable.views),
+                            painter = painterResource(id = R.drawable.share),
                             contentDescription = null,
                             modifier = Modifier
                                 .size(24.dp)
                                 .padding(start = 8.dp),
 
                             )
-                        Row {
-                            Icon(
-                                painter = painterResource(id = R.drawable.share) ,
-                                contentDescription = null ,
-                                modifier = Modifier
-                                    .size(24.dp)
-                                    .padding(start = 8.dp) ,
-
-                                )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text("5")
-                        }
-
 
                     }
                 }

@@ -50,8 +50,6 @@ fun ImportAccount(navController: NavController,
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
 
 
-
-
     var inputText by remember {
         mutableStateOf("")
     }
@@ -87,7 +85,7 @@ fun ImportAccount(navController: NavController,
              if(getUserData.data)
              {
 
-                 if (inputText.length==64)
+                 if (inputText.length>=64 && inputText.length<=66)
                  {
                      val customMnemonic="customMnemonic"
                      walletVM.createWallet(WalletEntity(null,mnemonicPhrase=customMnemonic,privateKey=data.privateKey,address=data.address))
@@ -103,7 +101,7 @@ fun ImportAccount(navController: NavController,
              }
              else
              {
-                 if (inputText.length==64)
+                 if (inputText.length>=64 && inputText.length<=66)
                  {
                      val customMnemonic="customMnemonic"
                      navController.navigate(Screens.ReferralScreen.route+"/$customMnemonic/${data.privateKey}/${data.address}")
@@ -193,7 +191,7 @@ fun ImportAccount(navController: NavController,
 
         Button(
             onClick = {
-                if (inputText.length==64)
+                if (inputText.length>=64 && inputText.length<=66)
                 {
                     Log.e("1111","called")
                       importAccountModel

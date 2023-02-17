@@ -264,5 +264,18 @@ class NetworkModule {
         return  retrofitBuilder.client(okHttpClient).build().create(PostRewardSumI::class.java)
     }
 
+    @Singleton
+    @Provides
+    fun provideCinSendI(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):CinSendI {
+        return  retrofitBuilder.client(okHttpClient).build().create(CinSendI::class.java)
+    }
+
+
+    @Singleton
+    @Provides
+    fun providePCinBalance(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):CinBalanceI {
+        return  retrofitBuilder.client(okHttpClient).build().create(CinBalanceI::class.java)
+    }
+
 
 }

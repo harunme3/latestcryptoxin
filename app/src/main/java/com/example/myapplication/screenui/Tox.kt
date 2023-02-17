@@ -308,14 +308,13 @@ Column(modifier = Modifier
 
 
             val type =
-            "3".toRequestBody("text/plain".toMediaTypeOrNull())
+            "4".toRequestBody("text/plain".toMediaTypeOrNull())
             val _hashtag =
             "#cryptoxin".toRequestBody("text/plain".toMediaTypeOrNull())
             val _content =
             inputext.toRequestBody("text/plain".toMediaTypeOrNull())
             val videoHash =
-            "0".toRequestBody("text/plain".toMediaTypeOrNull())
-
+            "".toRequestBody("text/plain".toMediaTypeOrNull())
 
             imageUpdateViewModel.getImageUpdateCall(
             multifiles,
@@ -327,8 +326,7 @@ Column(modifier = Modifier
             videoHash
             )
     }
-
-                        },
+  },
                 )
 
 

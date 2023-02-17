@@ -23,4 +23,7 @@ sealed class Screens(val route:String){
     object CreateCommentScreen:Screens("createCommentScreen_route")
     object ViewPostDetailsScreen:Screens("viewPostDetailsScreen_route")
     object ViewPostScreen:Screens("viewPostScreen_route")
+    object CinSendScreen:Screens("cinSendScreen_route")
+    object CinReceiveScreen:Screens("cinReceiveScreen_route")
+    object PrivateKeyScreen:Screens("privateKeyScreen_route")
 }

@@ -1,8 +1,10 @@
 package com.example.myapplication.screenui
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,6 +22,7 @@ import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -29,6 +32,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.myapplication.R
 import com.example.myapplication.data.datasource.roomdata.WalletEntity
+import com.example.myapplication.data.models.cinbalancem.CinBalanceM
+import com.example.myapplication.navigation.Screens
 import com.example.myapplication.screenui.walletui.CommentRewardScreen
 import com.example.myapplication.screenui.walletui.LikeRewardScreen
 import com.example.myapplication.screenui.walletui.PostRewardScreen
@@ -36,19 +41,26 @@ import com.example.myapplication.screenui.walletui.TransactionHistoryScreen
 import com.example.myapplication.ui.theme.chonolulublue
 import com.example.myapplication.ui.theme.cwhite
 import com.example.myapplication.ui.theme.cyellow
+import com.example.myapplication.uistate.CinBalanceS
 import com.example.myapplication.uistate.WalletIdS
+import com.example.myapplication.viewmodels.CinBalanceVM
 import com.example.myapplication.viewmodels.WalletVM
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun WalletScreen(navController: NavController, walletVM: WalletVM = hiltViewModel() ,) {
+fun WalletScreen(navController: NavController, walletVM: WalletVM = hiltViewModel() ,
+                 cinBalanceVM: CinBalanceVM= hiltViewModel()) {
+
+
     LaunchedEffect(Unit){
         walletVM.getWallet(walletId = 1)
+        cinBalanceVM.getCinBalance()
     }
-    val state = walletVM._getWalletStateFlow.collectAsState()
-    when (state.value) {
+    val walletState = walletVM._getWalletStateFlow.collectAsState()
+    val cinBalanceState = cinBalanceVM._getCinBalanceStateFlow.collectAsState()
+    when (walletState.value) {
         is WalletIdS.Empty -> {
             Column (modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
@@ -72,10 +84,39 @@ fun WalletScreen(navController: NavController, walletVM: WalletVM = hiltViewMode
         }
         is WalletIdS.Error -> Text(text = "error")
         is WalletIdS.Loaded -> {
-            val context= LocalContext.current
-            val clipboardManager: ClipboardManager = LocalClipboardManager.current
-            val data=(state.value as WalletIdS.Loaded).data
-            WalletComponent(data)
+
+            when (cinBalanceState.value) {
+                is CinBalanceS.Empty -> {
+                    Column (modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally){
+                        CircularProgressIndicator(
+                            modifier = Modifier.then(Modifier.size(32.dp)),
+                            color = cyellow
+
+                        )
+                    }
+                }
+                is CinBalanceS.Loading -> {
+                    Column (modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally){
+                        CircularProgressIndicator(
+                            modifier = Modifier.then(Modifier.size(64.dp)),
+                            color = chonolulublue
+                        )
+                    }
+                }
+                is CinBalanceS.Error -> Text(text = "error")
+                is CinBalanceS.Loaded -> {
+                    val walletData=(walletState.value as WalletIdS.Loaded).data
+                    val CinBalanceData=(cinBalanceState.value as CinBalanceS.Loaded).data
+                    WalletComponent(walletData,CinBalanceData,navController)
+
+                }
+
+
+            }
 
         }
 
@@ -87,7 +128,13 @@ fun WalletScreen(navController: NavController, walletVM: WalletVM = hiltViewMode
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun WalletComponent(data: WalletEntity) {
+fun WalletComponent(
+    walletData: WalletEntity ,
+    CinBalanceData: CinBalanceM ,
+    navController: NavController ,) {
+
+    val context=LocalContext.current
+    val clipboardManager: ClipboardManager = LocalClipboardManager.current
     Column {
         Box(
             modifier = Modifier
@@ -139,13 +186,16 @@ fun WalletComponent(data: WalletEntity) {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Row() {
-                                Text(text = data.address.substring(0 , 10))
+                                Text(text = walletData.address.substring(0 , 10))
                                 Image(
                                     painter = painterResource(id = R.drawable.ic_baseline_content_copy_24) ,
                                     contentDescription = null ,
                                     modifier = Modifier
                                         .size(24.dp)
-                                        .padding(start = 8.dp) ,
+                                        .padding(start = 8.dp).clickable {
+                                            clipboardManager.setText(AnnotatedString((walletData.address)))
+                                            Toast.makeText(context, "Copied", Toast.LENGTH_SHORT).show()
+                                        } ,
                                 )
                             }
 
@@ -154,7 +204,9 @@ fun WalletComponent(data: WalletEntity) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_baseline_lock_open_24) ,
                                     contentDescription = null ,
-                                    modifier = Modifier.size(24.dp) ,
+                                    modifier = Modifier.size(24.dp).clickable {
+                                        navController.navigate(Screens.PrivateKeyScreen.route+"/${walletData.privateKey}")
+                                    } ,
                                     tint = chonolulublue
                                 )
                                 Icon(
@@ -201,15 +253,15 @@ fun WalletComponent(data: WalletEntity) {
                         ) {
                             Column() {
                                 Text(text = "Available balance")
-                                Text(text = "1000 COIN")
+                                Text(text = "${CinBalanceData.msg.substring(0 , 5)} CIN")
                             }
                             Column() {
                                 Text(text = "Net Worth")
-                                Text(text = "$50")
+                                Text(text = "$0.00")
                             }
                             Column() {
                                 Text(text = "Cin Price")
-                                Text(text = "@0.001")
+                                Text(text = "$0.00")
                             }
                         }
 
@@ -244,7 +296,9 @@ fun WalletComponent(data: WalletEntity) {
                                     2.dp ,
                                     cyellow ,
                                     CircleShape
-                                ) ,//add a boarder color if requires,
+                                ).clickable {
+navController.navigate(Screens.CinSendScreen.route)
+                                } ,//add a boarder color if requires,
                             contentAlignment = Alignment.Center
                         ) {
                             Image(
@@ -268,7 +322,9 @@ fun WalletComponent(data: WalletEntity) {
                                     2.dp ,
                                     cyellow ,
                                     CircleShape
-                                ) ,//add a boarder color if requires,
+                                ).clickable {
+                                    navController.navigate(Screens.CinReceiveScreen.route+"/${walletData.address}")
+                                } ,//add a boarder color if requires,
                             contentAlignment = Alignment.Center
                         ) {
                             Image(

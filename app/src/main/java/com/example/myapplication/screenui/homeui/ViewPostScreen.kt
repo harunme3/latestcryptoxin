@@ -15,8 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.ClipboardManager
-import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -27,11 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.R
-import com.example.myapplication.data.models.commentsm.CommentsM
 import com.example.myapplication.data.models.specificpostm.SpecificPostM
-import com.example.myapplication.data.models.userpostm.Data
-import com.example.myapplication.navigation.Screens
-import com.example.myapplication.screenui.AllPostCard
 import com.example.myapplication.ui.theme.*
 import com.example.myapplication.uistate.CommentsS
 import com.example.myapplication.uistate.SpecificPostS
@@ -51,8 +45,7 @@ fun ViewPostScreen(navController:NavController , postId: String, specificPostVM:
       }
     val specificPostState = specificPostVM._getSpecificPostStateFlow.collectAsState()
     val commentsState = commentsVM._getCommentsStateFlow.collectAsState()
-    Log.e("2222",specificPostState.value.toString())
-    Log.e("2222",commentsState.value.toString())
+
 
     when (specificPostState.value) {
         is SpecificPostS.Empty -> {
@@ -106,8 +99,7 @@ fun ViewPostScreen(navController:NavController , postId: String, specificPostVM:
                 }
                 is CommentsS.Error -> Text(text = "error")
                 is CommentsS.Loaded -> {
-                    val context= LocalContext.current
-                    val clipboardManager: ClipboardManager = LocalClipboardManager.current
+
 
                     val specificPostData=(specificPostState.value as SpecificPostS.Loaded).data
                     val commentsData=(commentsState.value as CommentsS.Loaded).data.data
@@ -120,7 +112,7 @@ fun ViewPostScreen(navController:NavController , postId: String, specificPostVM:
                             ViewPostCard(specificPostData)
                         }
                         item {
-                            (1..20).forEachIndexed { index , it ->
+                            commentsData.forEachIndexed { index , it ->
                               ViewPostScreenCard(it)
                             }
                         }
@@ -304,7 +296,7 @@ fun ViewPostCard(
                             Row {
                                 Spacer(modifier = Modifier.width(4.dp))
                             }
-                            Text("5")
+                            Text(text = specificPostData.data[0].CommentCount)
                         }
                         Row {
                             Icon(
@@ -316,7 +308,7 @@ fun ViewPostCard(
 
                                 )
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("5")
+                            Text(text = specificPostData.data[0].reportCount)
                         }
                         Row {
                             Icon(
@@ -326,7 +318,6 @@ fun ViewPostCard(
                                     .size(24.dp)
                                     .padding(start = 8.dp)
                                     .clickable {
-                                        Log.d("1111" , "like call")
                                         likePostVM.getLikePost(postId = specificPostData.data[0].pstId)
                                     } ,
 
@@ -335,25 +326,14 @@ fun ViewPostCard(
                             Text(text = specificPostData.data[0].likeCount)
                         }
                         Icon(
-                            painter = painterResource(id = R.drawable.views) ,
+                            painter = painterResource(id = R.drawable.share) ,
                             contentDescription = null,
                             modifier = Modifier
                                 .size(24.dp)
                                 .padding(start = 8.dp),
 
                             )
-                        Row {
-                            Icon(
-                                painter = painterResource(id = R.drawable.share) ,
-                                contentDescription = null ,
-                                modifier = Modifier
-                                    .size(24.dp)
-                                    .padding(start = 8.dp) ,
 
-                                )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text("5")
-                        }
 
 
                     }
