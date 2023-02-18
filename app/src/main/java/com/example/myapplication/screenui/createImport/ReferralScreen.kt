@@ -1,35 +1,28 @@
 package com.example.myapplication.screenui.createImport
 
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.myapplication.data.datasource.roomdata.WalletEntity
-import com.example.myapplication.navigation.Graph
+import com.airbnb.lottie.compose.*
+import com.example.myapplication.R
 import com.example.myapplication.navigation.Screens
 import com.example.myapplication.ui.theme.cblack
-import com.example.myapplication.ui.theme.cgraylight
 import com.example.myapplication.ui.theme.chonolulublue
 import com.example.myapplication.ui.theme.cwhite
 import com.example.myapplication.uistate.RegisterState
-import com.example.myapplication.viewmodels.CreateWalletViewModels
 import com.example.myapplication.viewmodels.RegisterViewModel
 import com.example.myapplication.viewmodels.WalletVM
 
@@ -43,7 +36,7 @@ fun ReferralScreen(
     walletVM: WalletVM = hiltViewModel()
 ){
     val state = registerViewModel._registrationStateFlow.collectAsState()
-    var inputTextReferral by remember {
+    var referralcode by remember {
         mutableStateOf("")
     }
 
@@ -51,7 +44,7 @@ fun ReferralScreen(
     if (state.value is RegisterState.Loaded){
         LaunchedEffect(key1 ="key1"){
             Log.e("1111",state.value.toString())
-            navController.navigate(Screens.MandatoryDetails.route+"/${mnemonic}/${privateKey}/${address}/${inputTextReferral}")
+            navController.navigate(Screens.MandatoryDetails.route+"/${mnemonic}/${privateKey}/${address}/${referralcode}")
         }
 
     }
@@ -62,49 +55,37 @@ fun ReferralScreen(
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(20.dp),
-    horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
+        horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
-        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-
-            Text(text = "Referral Code", style = TextStyle(fontSize = 24.sp))
-            Box(modifier = Modifier
-                .padding(2.dp)
-                .clickable {
-                    inputTextReferral = "1"
-                    registerViewModel.registrationCall(
-                        myAddress = address ,
-                        privateKey = privateKey ,
-                        referralCode = "1"
-                    )
-
-
-                })
-            {
-                Text(
-                    text = "skip",
-                    modifier = Modifier
-                        .background(
-                            color = cgraylight ,
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                        .padding(vertical = 8.dp , horizontal = 16.dp),
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
-                )
-            }
+        Box(modifier = Modifier.height(400.dp).fillMaxWidth()){
+            LoaderReferral()
         }
+
           Box() {
-                BasicTextField(
-                    modifier= Modifier
-                        .border(2.dp , cblack)
-                        .height(50.dp)
-                        .fillMaxWidth(),
-                    value = inputTextReferral,
-                    onValueChange ={
-                        inputTextReferral=it
-            } )
+
+              OutlinedTextField(
+                  modifier =Modifier.padding(horizontal = 24.dp),
+                  label = {
+                      Text(
+                          text = "Enter Referral Address",
+                          style = TextStyle(
+                              color = cblack,
+                          )
+                      )
+                  },
+                  colors = TextFieldDefaults.outlinedTextFieldColors(
+                      focusedBorderColor = chonolulublue,
+                      unfocusedBorderColor = chonolulublue,
+                      focusedLabelColor = cblack,
+                      cursorColor =chonolulublue,
+                      textColor = cblack
+                  ),
+                  value = referralcode,
+                  onValueChange = { referralcode = it },
+              )
+
+
 }
 
 
@@ -114,7 +95,7 @@ fun ReferralScreen(
             registerViewModel.registrationCall(
                 myAddress = address,
                 privateKey = privateKey,
-                referralCode = inputTextReferral
+                referralCode = referralcode
             )
 
         },
@@ -144,3 +125,17 @@ fun ReferralScreen(
     
 }
 
+@Composable
+private fun LoaderReferral() {
+
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.referral))
+    val progress by animateLottieCompositionAsState(composition,
+        isPlaying = true,
+        reverseOnRepeat=true,
+        iterations = LottieConstants.IterateForever,)
+    LottieAnimation(
+        composition = composition,
+        progress = { progress },
+    )
+
+}

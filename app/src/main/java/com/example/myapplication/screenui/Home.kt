@@ -57,9 +57,6 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
     val coroutineScope = rememberCoroutineScope()
     val allPostState = allPostVM._getAllPostStateFlow.collectAsState()
 
-
-
-
     when (allPostState.value) {
         is AllPostS.Empty -> {
             Column (modifier = Modifier.fillMaxSize(),
@@ -111,7 +108,7 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
                                 navController.navigate(Graph.REFERRAL)
                             }
 
-                            if (it=="Daily Check-IN"){
+                            if (it=="Rewards"){
                                 Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
                                 navController.popBackStack()
                                 navController.navigate(Graph.DAILY_CHECK_IN)

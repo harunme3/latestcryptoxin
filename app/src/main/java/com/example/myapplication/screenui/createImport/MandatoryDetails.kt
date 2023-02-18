@@ -1,15 +1,9 @@
 package com.example.myapplication.screenui.createImport
 
 import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,9 +17,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.myapplication.data.bodymodel.ProfileUpdateBody
-import com.example.myapplication.data.datasource.roomdata.WalletEntity
+import com.airbnb.lottie.compose.*
+import com.example.myapplication.R
 import com.example.myapplication.navigation.Graph
+import com.example.myapplication.ui.theme.cblack
 import com.example.myapplication.ui.theme.chonolulublue
 import com.example.myapplication.ui.theme.cwhite
 import com.example.myapplication.uistate.ProfileUpdateS
@@ -42,6 +37,7 @@ fun MandatoryDetails(
      profileUpdateVM: ProfileUpdateVM= hiltViewModel(),
      walletVM: WalletVM = hiltViewModel()
 ){
+
     val state = profileUpdateVM._setProfileUpdateStateFlow.collectAsState()
     val context=LocalContext.current
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
@@ -59,8 +55,8 @@ fun MandatoryDetails(
 
     if (state.value is ProfileUpdateS.Loaded){
         LaunchedEffect(key1 ="key1"){
-           walletVM.createWallet(WalletEntity(null,mnemonicPhrase=mnemonic,privateKey=privateKey,address=address))
-        navController.navigate(Graph.DASHBOARD)
+            //    walletVM.createWallet(WalletEntity(null,mnemonicPhrase=mnemonic,privateKey=privateKey,address=address))
+            navController.navigate(Graph.DASHBOARD)
         }
 
     }
@@ -70,18 +66,60 @@ fun MandatoryDetails(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 20.dp),
-        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
+        Box(
+            modifier = Modifier
+                .height(300.dp)
+                .fillMaxWidth()
+        ) {
+            MandatoryDetailsLoaderImport()
+        }
 
-       TextField(value = name, onValueChange = {
-            name = it
-        })
 
-       TextField(value = username, onValueChange = {
-            username = it
-        })
+        OutlinedTextField(
+            modifier =Modifier.padding(horizontal = 24.dp),
+            label = {
+                Text(
+                    text = "Enter Full Name",
+                    style = TextStyle(
+                        color = cblack ,
+                    )
+                )
+            },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = chonolulublue,
+                unfocusedBorderColor = chonolulublue,
+                focusedLabelColor = cblack ,
+                cursorColor =chonolulublue,
+                textColor = cblack
+            ),
+            value = name,
+            onValueChange = { name = it },
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+
+        OutlinedTextField(
+            modifier =Modifier.padding(horizontal = 24.dp),
+            label = {
+                Text(
+                    text = "Enter User Name",
+                    style = TextStyle(
+                        color = cblack ,
+                    )
+                )
+            },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = chonolulublue,
+                unfocusedBorderColor = chonolulublue,
+                focusedLabelColor = cblack ,
+                cursorColor =chonolulublue,
+                textColor = cblack
+            ),
+            value = username,
+            onValueChange = { username = it },
+        )
 
 
 
@@ -91,7 +129,7 @@ fun MandatoryDetails(
 
                 profileUpdateVM.setProfileUpdate(
                     name = name ,
-                    UserName =username ,
+                    UserName =username,
                     email = "" ,
                     organization = "" ,
                     profileTag = "" ,
@@ -123,4 +161,23 @@ fun MandatoryDetails(
 
         }
     }
+
+
+}
+
+@Composable
+private fun MandatoryDetailsLoaderImport() {
+
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.profile))
+    val progress by animateLottieCompositionAsState(
+        composition ,
+        isPlaying = true ,
+        reverseOnRepeat = true ,
+        iterations = LottieConstants.IterateForever ,
+    )
+    LottieAnimation(
+        composition = composition ,
+        progress = { progress } ,
+    )
+
 }
