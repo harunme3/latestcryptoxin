@@ -1,26 +1,34 @@
 package com.example.myapplication.screenui.walletui
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.typography
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myapplication.data.models.trxhistorym.Result
-import com.example.myapplication.ui.theme.*
+import com.example.myapplication.ui.theme.cgraystrongest
+import com.example.myapplication.ui.theme.chonolulublue
+import com.example.myapplication.ui.theme.cwhite
+import com.example.myapplication.ui.theme.cyellow
 import com.example.myapplication.uistate.TrxHistoryS
 import com.example.myapplication.viewmodels.TrxHistoryVM
 
@@ -86,7 +94,7 @@ fun TransactionHistoryScreen(trxHistoryVM: TrxHistoryVM= hiltViewModel()) {
 
 @Composable
 fun TransactionHistoryCard(result: Result) {
-
+    val uriHandler = LocalUriHandler.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -94,7 +102,8 @@ fun TransactionHistoryCard(result: Result) {
             .padding(8.dp)
             .clip(RoundedCornerShape(16.dp))
             .clickable(onClick = {
-                //cin scan url
+               val url="https://cinscan.com/tx/${result.hash}"
+                uriHandler.openUri(Uri.parse(url).toString())
             }) ,
         elevation = 0.dp ,
         backgroundColor = cgraystrongest

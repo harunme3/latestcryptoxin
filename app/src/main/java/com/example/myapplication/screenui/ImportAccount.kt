@@ -30,14 +30,17 @@ import com.example.myapplication.data.datasource.roomdata.WalletEntity
 import com.example.myapplication.data.models.importaccountmodel.ImportAccountModel
 import com.example.myapplication.navigation.Graph
 import com.example.myapplication.navigation.Screens
+import com.example.myapplication.screenui.apicallCall.ApiCall
 import com.example.myapplication.ui.theme.cgraystrong
 import com.example.myapplication.ui.theme.chonolulublue
 import com.example.myapplication.ui.theme.cwhite
 import com.example.myapplication.ui.theme.cyellow
 import com.example.myapplication.uistate.GetUserState
 import com.example.myapplication.uistate.ImportWalletState
+import com.example.myapplication.uistate.SignupBonusS
 import com.example.myapplication.viewmodels.GetUserViewModel
 import com.example.myapplication.viewmodels.ImportWalletViewModel
+import com.example.myapplication.viewmodels.SignupBonusVM
 import com.example.myapplication.viewmodels.WalletVM
 
 
@@ -46,120 +49,51 @@ fun ImportAccount(
     navController: NavController ,
     importAccountModel: ImportWalletViewModel = hiltViewModel() ,
     getUserViewModel: GetUserViewModel = hiltViewModel() ,
-    walletVM: WalletVM = hiltViewModel()
-){
-    Column(
-      modifier=Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Box(
-            modifier = Modifier
-                .height(200.dp)
-                .fillMaxWidth()
-        ) {
-            Done1Loader()
-        }
-
-        Box(
-            modifier = Modifier
-                .height(200.dp)
-                .fillMaxWidth()
-        ) {
-            Done2Loader()
-        }
-
-        Text(text = "Now You are Pre-Registered to CryptoxIN", style = TextStyle(fontSize = 18.sp))
-        Text(text = "Keep Referring", style = TextStyle(fontSize = 24.sp))
-
-    }
-
-}
-
-@Composable
-private fun Done1Loader() {
-
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.congratulations))
-    val progress by animateLottieCompositionAsState(
-        composition ,
-        isPlaying = true ,
-        reverseOnRepeat = true ,
-        iterations = LottieConstants.IterateForever ,
-    )
-    LottieAnimation(
-        composition = composition ,
-        progress = { progress } ,
-    )
-
-}
-
-@Composable
-private fun Done2Loader() {
-
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.done))
-    val progress by animateLottieCompositionAsState(
-        composition ,
-        isPlaying = true ,
-        reverseOnRepeat = true ,
-        iterations = LottieConstants.IterateForever ,
-    )
-    LottieAnimation(
-        composition = composition ,
-        progress = { progress } ,
-    )
-
-}
-
-
-
-
-
-
-
-@Composable
-fun ImportAccount1(
-    navController: NavController ,
-    importAccountModel: ImportWalletViewModel = hiltViewModel() ,
-    getUserViewModel: GetUserViewModel = hiltViewModel() ,
-    walletVM: WalletVM = hiltViewModel()
+    signupBonusVM: SignupBonusVM = hiltViewModel() ,
+    walletVM: WalletVM = hiltViewModel() ,
 ) {
-    val state = importAccountModel._importWalletStateFlow.collectAsState()
-    val stateGetUser = getUserViewModel._getUserStateFlow.collectAsState()
-    val context = LocalContext.current
+    val importAccountState = importAccountModel._importWalletStateFlow.collectAsState()
+    val getUserState = getUserViewModel._getUserStateFlow.collectAsState()
+    val signupBonusState = signupBonusVM._getSignupBonusStateFlow.collectAsState()
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
+    val context = LocalContext.current
+
+    var btntext by remember {
+        mutableStateOf("Import")
+    }
 
 
     var inputText by remember {
         mutableStateOf("")
     }
+
     var data: ImportAccountModel by remember {
         mutableStateOf(ImportAccountModel(false , "" , ""))
     }
-
-
-    if (state.value is ImportWalletState.Loaded) {
+    if (importAccountState.value is ImportWalletState.Loaded) {
 
         LaunchedEffect(key1 = "key1") {
-            data = (state.value as ImportWalletState.Loaded).data
-            Log.v("1112" , (state.value as ImportWalletState.Loaded).data.toString())
-            Log.e("1112" , data.toString())
+            data = (importAccountState.value as ImportWalletState.Loaded).data
+            Log.e("1112" , (importAccountState.value as ImportWalletState.Loaded).data.toString())
             getUserViewModel
                 .getUserCall(
                     myAddress = data.address ,
                 )
         }
 
-
     }
-    Log.d("1111" , stateGetUser.value.toString())
-    if (stateGetUser.value is GetUserState.Loaded) {
 
-        LaunchedEffect(key1 = "key2") {
-            val getUserData = (stateGetUser.value as GetUserState.Loaded).data
-            Log.e("1111" , getUserData.toString())
+
+
+    if (getUserState.value is GetUserState.Loaded) {
+
+        LaunchedEffect(key1 = "key3") {
+            val getUserData = (getUserState.value as GetUserState.Loaded).data
+            Log.e("1112" , getUserData.toString())
 
             if (getUserData.data) {
 
-                if (inputText.length >= 64 && inputText.length <= 66) {
+                if (inputText.length in 64..66) {
                     val customMnemonic = "customMnemonic"
                     walletVM.createWallet(
                         WalletEntity(
@@ -182,19 +116,61 @@ fun ImportAccount1(
                     navController.navigate(Graph.DASHBOARD)
                 }
 
-
             } else {
-                if (inputText.length >= 64 && inputText.length <= 66) {
+
+                signupBonusVM.getSignupBonus(
+                    myAddress = data.address ,
+                    privateKey = data.privateKey
+                )
+            }
+        }
+
+    }
+
+
+
+    Log.e("1112" , signupBonusState.value.toString())
+
+    if (signupBonusState.value is SignupBonusS.Loaded) {
+        LaunchedEffect(key1 = "key2") {
+            val signupBonusData = (signupBonusState.value as SignupBonusS.Loaded).data
+            Log.e("1112" , signupBonusData.data.toString())
+            if (signupBonusData.status == false) {
+                if (inputText.length in 64..66) {
+                    val customMnemonic = "customMnemonic"
+                    walletVM.createWallet(
+                        WalletEntity(
+                            null ,
+                            mnemonicPhrase = customMnemonic ,
+                            privateKey = data.privateKey ,
+                            address = data.address
+                        )
+                    )
+                    navController.navigate(Graph.DASHBOARD)
+                } else {
+                    walletVM.createWallet(
+                        WalletEntity(
+                            null ,
+                            mnemonicPhrase = inputText ,
+                            privateKey = data.privateKey ,
+                            address = data.address
+                        )
+                    )
+                    navController.navigate(Graph.DASHBOARD)
+                }
+            } else {
+                if (inputText.length in 64..66) {
                     val customMnemonic = "customMnemonic"
                     navController.navigate(Screens.ReferralScreen.route + "/$customMnemonic/${data.privateKey}/${data.address}")
                 } else {
                     navController.navigate(Screens.ReferralScreen.route + "/$inputText/${data.privateKey}/${data.address}")
                 }
             }
+
         }
 
-    }
 
+    }
 
 
 
@@ -216,8 +192,6 @@ fun ImportAccount1(
 
 
         Column(modifier = Modifier.fillMaxWidth()) {
-//------------------------------------------------------------------
-
             Row() {
                 Box(
                     modifier =
@@ -231,7 +205,7 @@ fun ImportAccount1(
                     Text(
                         text = "Private Key" , style = TextStyle(fontSize = 18.sp) ,
                         maxLines = 1 ,
-                        color= cwhite,
+                        color = cwhite ,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -244,15 +218,13 @@ fun ImportAccount1(
                         .height(48.dp) ,
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "Mnemonic Phrase" ,
-                        color= cwhite,
-                        style = TextStyle(fontSize = 18.sp) , maxLines = 1)
+                    Text(
+                        text = "Mnemonic Phrase" ,
+                        color = cwhite ,
+                        style = TextStyle(fontSize = 18.sp) , maxLines = 1
+                    )
                 }
             }
-
-
-//------------------------------------------------------------------
-
 
             Box(
                 modifier = Modifier
@@ -272,20 +244,20 @@ fun ImportAccount1(
                         value = inputText ,
                         onValueChange = {
                             inputText = it
-                        },
+                        } ,
                         decorationBox = { innerTextField ->
                             if (inputText.isEmpty()) {
                                 Text(
-                                    modifier = Modifier.padding(horizontal = 8.dp),
-                                    text="Enter Private Key OR Mnemonic Phrase",
-                                    style = TextStyle(color = cgraystrong, fontSize = 18.sp),
+                                    modifier = Modifier.padding(horizontal = 8.dp) ,
+                                    text = "Enter Private Key OR Mnemonic Phrase" ,
+                                    style = TextStyle(color = cgraystrong , fontSize = 18.sp) ,
 
                                     )
                             }
                             innerTextField()
-                        },
+                        } ,
 
-                    )
+                        )
                     Row(
                         horizontalArrangement = Arrangement.End ,
                         modifier = Modifier.fillMaxWidth()
@@ -317,14 +289,13 @@ fun ImportAccount1(
 
             }
 
-
         }
 
 
         Button(
             onClick = {
-                if (inputText.length >= 64 && inputText.length <= 66) {
-                    Log.e("1111" , "called")
+                btntext = "Importing"
+                if (inputText.length in 64..66) {
                     importAccountModel
                         .importWalletCall(
                             privateKey = inputText ,
@@ -338,7 +309,6 @@ fun ImportAccount1(
                         )
                 }
 
-
             } ,
             modifier = Modifier
                 .padding(30.dp)
@@ -349,7 +319,7 @@ fun ImportAccount1(
 
 
             Text(
-                text = "Import" ,
+                text = btntext ,
                 style = TextStyle(
                     color = cwhite ,
                     fontSize = 18.sp
@@ -366,7 +336,6 @@ fun ImportAccount1(
 
 @Composable
 private fun LoaderImport() {
-
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.wallet))
     val progress by animateLottieCompositionAsState(
         composition ,

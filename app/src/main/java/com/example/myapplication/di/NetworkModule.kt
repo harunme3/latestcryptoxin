@@ -1,5 +1,4 @@
 package com.example.myapplication.di
-import android.util.Log
 import com.example.myapplication.data.datasource.remotedata.*
 import com.example.myapplication.utilities.UrlConstants
 import dagger.Module
@@ -9,6 +8,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -19,7 +19,12 @@ class NetworkModule {
     @Singleton
     @Provides
     fun provideOkHttpClient(allInterceptor: AllInterceptor ):OkHttpClient{
-        return OkHttpClient.Builder().addInterceptor(allInterceptor).build()
+        return OkHttpClient.Builder()
+            .callTimeout(2, TimeUnit.MINUTES)
+            .connectTimeout(20, TimeUnit.MINUTES)
+            .readTimeout(30, TimeUnit.MINUTES)
+            .writeTimeout(30, TimeUnit.MINUTES)
+            .addInterceptor(allInterceptor).build()
     }
 
 
@@ -284,5 +289,11 @@ class NetworkModule {
         return  retrofitBuilder.client(okHttpClient).build().create(TrxHistoryI::class.java)
     }
 
+
+    @Singleton
+    @Provides
+    fun provideSignupBonus(retrofitBuilder: Retrofit.Builder,okHttpClient: OkHttpClient):SignupBonusI {
+        return  retrofitBuilder.client(okHttpClient).build().create(SignupBonusI::class.java)
+    }
 
 }

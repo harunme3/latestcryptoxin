@@ -1,5 +1,8 @@
 package com.example.myapplication.screenui
 
+import android.content.Intent
+import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,6 +24,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -60,6 +64,11 @@ fun WalletScreen(navController: NavController, walletVM: WalletVM = hiltViewMode
     }
     val walletState = walletVM._getWalletStateFlow.collectAsState()
     val cinBalanceState = cinBalanceVM._getCinBalanceStateFlow.collectAsState()
+
+    Log.d("1111",walletState.value.toString())
+    Log.d("1111",cinBalanceState.value.toString())
+
+
     when (walletState.value) {
         is WalletIdS.Empty -> {
             Column (modifier = Modifier.fillMaxSize(),
@@ -111,7 +120,7 @@ fun WalletScreen(navController: NavController, walletVM: WalletVM = hiltViewMode
                 is CinBalanceS.Loaded -> {
                     val walletData=(walletState.value as WalletIdS.Loaded).data
                     val CinBalanceData=(cinBalanceState.value as CinBalanceS.Loaded).data
-                    WalletComponent(walletData,CinBalanceData,navController)
+                 WalletComponent(walletData,CinBalanceData,navController)
 
                 }
 
@@ -132,7 +141,7 @@ fun WalletComponent(
     walletData: WalletEntity ,
     CinBalanceData: CinBalanceM ,
     navController: NavController ,) {
-
+    val uriHandler = LocalUriHandler.current
     val context=LocalContext.current
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
     Column {
@@ -212,7 +221,15 @@ fun WalletComponent(
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_baseline_screen_share_24) ,
                                     contentDescription = null ,
-                                    modifier = Modifier
+                                    modifier = Modifier.clickable {
+                                        val sendIntent: Intent = Intent().apply {
+                                            action = Intent.ACTION_SEND
+                                            putExtra(Intent.EXTRA_TEXT, walletData.address)
+                                            type = "text/plain"
+                                        }
+                                        val shareIntent = Intent.createChooser(sendIntent, null)
+                                        context.startActivity(shareIntent)
+                                    }
                                         .size(28.dp)
                                         .padding(start = 8.dp) ,
                                     tint = chonolulublue
@@ -220,7 +237,10 @@ fun WalletComponent(
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_baseline_computer_24) ,
                                     contentDescription = null ,
-                                    modifier = Modifier
+                                    modifier = Modifier.clickable {
+                                        val url="https://cinscan.com/"
+                                        uriHandler.openUri(Uri.parse(url).toString())
+                                    }
                                         .size(28.dp)
                                         .padding(start = 8.dp) ,
                                     tint = chonolulublue
@@ -253,7 +273,7 @@ fun WalletComponent(
                         ) {
                             Column() {
                                 Text(text = "Available balance")
-                                Text(text = "${CinBalanceData.msg.substring(0 , 5)} CIN")
+                                Text(text = "${String.format("%.3f",CinBalanceData.msg.toDouble())} CIN")
                             }
                             Column() {
                                 Text(text = "Net Worth")
@@ -346,7 +366,7 @@ navController.navigate(Screens.CinSendScreen.route)
 
         }
 
-        WalletTabLayout()
+   WalletTabLayout()
     }
 }
 

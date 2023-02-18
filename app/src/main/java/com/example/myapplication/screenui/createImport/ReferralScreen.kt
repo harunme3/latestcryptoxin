@@ -1,6 +1,7 @@
 package com.example.myapplication.screenui.createImport
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -36,10 +38,16 @@ fun ReferralScreen(
     walletVM: WalletVM = hiltViewModel()
 ){
     val state = registerViewModel._registrationStateFlow.collectAsState()
+
+    val context= LocalContext.current
+
+    var btntextreferral by remember {
+        mutableStateOf("Submit")
+    }
     var referralcode by remember {
         mutableStateOf("")
     }
-
+    Log.e("3333",state.value.toString())
 
     if (state.value is RegisterState.Loaded){
         LaunchedEffect(key1 ="key1"){
@@ -92,6 +100,14 @@ fun ReferralScreen(
 
     Button(
         onClick = {
+
+            if (referralcode.length<42){
+                Toast.makeText(context, "Enter Correct Referral Address", Toast.LENGTH_SHORT).show()
+                return@Button
+            }
+
+
+            btntextreferral="Submitting"
             registerViewModel.registrationCall(
                 myAddress = address,
                 privateKey = privateKey,
@@ -106,7 +122,7 @@ fun ReferralScreen(
     )
     {
 
-        Text(text = "Submit",
+        Text(text = btntextreferral,
             style = TextStyle(
                 color = cwhite,
                 fontSize = 18.sp

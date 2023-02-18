@@ -19,11 +19,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.airbnb.lottie.compose.*
 import com.example.myapplication.R
+import com.example.myapplication.data.datasource.roomdata.WalletEntity
 import com.example.myapplication.navigation.Graph
 import com.example.myapplication.ui.theme.cblack
 import com.example.myapplication.ui.theme.chonolulublue
 import com.example.myapplication.ui.theme.cwhite
 import com.example.myapplication.uistate.ProfileUpdateS
+import com.example.myapplication.viewmodels.ProfileUpdateInitialVM
 import com.example.myapplication.viewmodels.ProfileUpdateVM
 import com.example.myapplication.viewmodels.WalletVM
 
@@ -34,13 +36,19 @@ fun MandatoryDetails(
      privateKey: String,
      address: String,
      referralCode: String,
-     profileUpdateVM: ProfileUpdateVM= hiltViewModel(),
+   profileUpdateInitialVM: ProfileUpdateInitialVM= hiltViewModel(),
      walletVM: WalletVM = hiltViewModel()
 ){
 
-    val state = profileUpdateVM._setProfileUpdateStateFlow.collectAsState()
+    val state = profileUpdateInitialVM._setProfileUpdateInitialStateFlow.collectAsState()
     val context=LocalContext.current
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
+
+    Log.e("3333",state.value.toString())
+
+    var btntextmand by remember {
+        mutableStateOf("Submit")
+    }
 
     var name by remember {
         mutableStateOf("")
@@ -55,7 +63,7 @@ fun MandatoryDetails(
 
     if (state.value is ProfileUpdateS.Loaded){
         LaunchedEffect(key1 ="key1"){
-            //    walletVM.createWallet(WalletEntity(null,mnemonicPhrase=mnemonic,privateKey=privateKey,address=address))
+           walletVM.createWallet(WalletEntity(null,mnemonicPhrase=mnemonic,privateKey=privateKey,address=address))
             navController.navigate(Graph.DASHBOARD)
         }
 
@@ -126,10 +134,12 @@ fun MandatoryDetails(
         Button(
             onClick = {
 
-
-                profileUpdateVM.setProfileUpdate(
+                btntextmand="Submitting"
+                profileUpdateInitialVM.setProfileUpdate(
+                    myAddress =address ,
+                    privateKey=privateKey,
                     name = name ,
-                    UserName =username,
+                    UserName ="@${username}",
                     email = "" ,
                     organization = "" ,
                     profileTag = "" ,
@@ -149,7 +159,7 @@ fun MandatoryDetails(
         )
         {
 
-            Text(text = "Next",
+            Text(text = btntextmand,
                 style = TextStyle(
                     color = cwhite,
                     fontSize = 18.sp

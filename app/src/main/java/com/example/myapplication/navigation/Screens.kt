@@ -27,4 +27,5 @@ sealed class Screens(val route:String){
     object CinReceiveScreen:Screens("cinReceiveScreen_route")
     object PrivateKeyScreen:Screens("privateKeyScreen_route")
     object ProfileImageUpdateScreen:Screens("profileImageUpdateScreen_route")
+    object DoneScreen:Screens("doneScreen_route")
 }
