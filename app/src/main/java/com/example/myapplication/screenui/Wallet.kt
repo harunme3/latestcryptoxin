@@ -201,9 +201,12 @@ fun WalletComponent(
                                     contentDescription = null ,
                                     modifier = Modifier
                                         .size(24.dp)
-                                        .padding(start = 8.dp).clickable {
+                                        .padding(start = 8.dp)
+                                        .clickable {
                                             clipboardManager.setText(AnnotatedString((walletData.address)))
-                                            Toast.makeText(context, "Copied", Toast.LENGTH_SHORT).show()
+                                            Toast
+                                                .makeText(context , "Copied" , Toast.LENGTH_SHORT)
+                                                .show()
                                         } ,
                                 )
                             }
@@ -213,23 +216,30 @@ fun WalletComponent(
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_baseline_lock_open_24) ,
                                     contentDescription = null ,
-                                    modifier = Modifier.size(24.dp).clickable {
-                                        navController.navigate(Screens.PrivateKeyScreen.route+"/${walletData.privateKey}")
-                                    } ,
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .clickable {
+                                            navController.navigate(Screens.PrivateKeyScreen.route + "/${walletData.privateKey}")
+                                        } ,
                                     tint = chonolulublue
                                 )
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_baseline_screen_share_24) ,
                                     contentDescription = null ,
-                                    modifier = Modifier.clickable {
-                                        val sendIntent: Intent = Intent().apply {
-                                            action = Intent.ACTION_SEND
-                                            putExtra(Intent.EXTRA_TEXT, walletData.address)
-                                            type = "text/plain"
+                                    modifier = Modifier
+                                        .clickable {
+                                            val sendIntent: Intent = Intent().apply {
+                                                action = Intent.ACTION_SEND
+                                                putExtra(
+                                                    Intent.EXTRA_TEXT ,
+                                                    "Earn 1\$ worth of CIN Coins just by signing up.\nCryptoxIN is the world's first decentralised Crypto Social community, connecting advertisers and users. \n https://play.google.com/store/apps/details?id=com.cryptoxin \n Enter this Referral code \n ${walletData.address}"
+                                                )
+                                                type = "text/plain"
+                                            }
+                                            val shareIntent =
+                                                Intent.createChooser(sendIntent , null)
+                                            context.startActivity(shareIntent)
                                         }
-                                        val shareIntent = Intent.createChooser(sendIntent, null)
-                                        context.startActivity(shareIntent)
-                                    }
                                         .size(28.dp)
                                         .padding(start = 8.dp) ,
                                     tint = chonolulublue
@@ -237,10 +247,15 @@ fun WalletComponent(
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_baseline_computer_24) ,
                                     contentDescription = null ,
-                                    modifier = Modifier.clickable {
-                                        val url="https://cinscan.com/"
-                                        uriHandler.openUri(Uri.parse(url).toString())
-                                    }
+                                    modifier = Modifier
+                                        .clickable {
+                                            val url = "https://cinscan.com/"
+                                            uriHandler.openUri(
+                                                Uri
+                                                    .parse(url)
+                                                    .toString()
+                                            )
+                                        }
                                         .size(28.dp)
                                         .padding(start = 8.dp) ,
                                     tint = chonolulublue
@@ -277,11 +292,11 @@ fun WalletComponent(
                             }
                             Column() {
                                 Text(text = "Net Worth")
-                                Text(text = "$0.00")
+                                Text(text = "${String.format("%.3f",(CinBalanceData.msg.toDouble()*0.0001))} CIN")
                             }
                             Column() {
                                 Text(text = "Cin Price")
-                                Text(text = "$0.00")
+                                Text(text = "$0.0001")
                             }
                         }
 
@@ -316,8 +331,9 @@ fun WalletComponent(
                                     2.dp ,
                                     cyellow ,
                                     CircleShape
-                                ).clickable {
-navController.navigate(Screens.CinSendScreen.route)
+                                )
+                                .clickable {
+                                    navController.navigate(Screens.CinSendScreen.route)
                                 } ,//add a boarder color if requires,
                             contentAlignment = Alignment.Center
                         ) {
@@ -342,8 +358,9 @@ navController.navigate(Screens.CinSendScreen.route)
                                     2.dp ,
                                     cyellow ,
                                     CircleShape
-                                ).clickable {
-                                    navController.navigate(Screens.CinReceiveScreen.route+"/${walletData.address}")
+                                )
+                                .clickable {
+                                    navController.navigate(Screens.CinReceiveScreen.route + "/${walletData.address}")
                                 } ,//add a boarder color if requires,
                             contentAlignment = Alignment.Center
                         ) {

@@ -1,6 +1,7 @@
 package com.example.myapplication.screenui
 
 
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -17,6 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -50,58 +52,71 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel(),
+fun HomeScreen(
+    navController: NavController , allPostVM: AllPostVM = hiltViewModel() ,
 
-) {
-       val scaffoldState = rememberScaffoldState()
+    ) {
+    val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
     val allPostState = allPostVM._getAllPostStateFlow.collectAsState()
-               val context= LocalContext.current
-            val clipboardManager: ClipboardManager = LocalClipboardManager.current
+    val context = LocalContext.current
+    val clipboardManager: ClipboardManager = LocalClipboardManager.current
+    val uriHandler = LocalUriHandler.current
 
+    Scaffold(
+        modifier = Modifier.fillMaxSize() ,
+        scaffoldState = scaffoldState ,
+        topBar = {
+            CTopAppBar(title = "CryptoxIN" , modifier = Modifier , onNavIconClick = {
+                coroutineScope.launch {
+                    scaffoldState.drawerState.open()
+                }
+            } , onNavIconClick2 = {
+                navController.navigate(Screens.ReferralTreeDataScreen.route)
+            })
+        } ,
+        drawerContent = {
+            DrawerContent {
+                coroutineScope.launch {
+                    // delay for the ripple effect
+                    delay(timeMillis = 250)
+                    scaffoldState.drawerState.close()
 
-               Scaffold(  modifier = Modifier.fillMaxSize(),
-                scaffoldState = scaffoldState,
-                topBar = {
-                    CTopAppBar(title = "CryptoxIN", modifier = Modifier, onNavIconClick = {
-                        coroutineScope.launch {
-                            scaffoldState.drawerState.open()
-                        }
-                    }, onNavIconClick2 = {
-                    navController.navigate(Screens.ReferralTreeDataScreen.route)
-                    })
-                },
-                drawerContent = {
-                    DrawerContent {
-                        coroutineScope.launch {
-                            // delay for the ripple effect
-                            delay(timeMillis = 250)
-                            scaffoldState.drawerState.close()
+//                    if (it == "Referral") {
+//                        Toast.makeText(context , "$it" , Toast.LENGTH_SHORT).show()
+//                        navController.popBackStack()
+//                        navController.navigate(Graph.REFERRAL)
+//                    }
+//
+//                    if (it == "Rewards") {
+//                        Toast.makeText(context , "$it" , Toast.LENGTH_SHORT).show()
+//                        navController.popBackStack()
+//                        navController.navigate(Graph.DAILY_CHECK_IN)
+//                    }
 
-                            if (it=="Referral"){
-                                Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
-                                navController.popBackStack()
-                                navController.navigate(Graph.REFERRAL)
-                            }
-
-                            if (it=="Rewards"){
-                                Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
-                                navController.popBackStack()
-                                navController.navigate(Graph.DAILY_CHECK_IN)
-                            }
-
-                        }
+                    if (it == "AirDrop") {
+                        Toast.makeText(context , "$it" , Toast.LENGTH_SHORT).show()
+                        navController.popBackStack()
+                        val url="https://cinscan.com/"
+                        uriHandler.openUri(Uri.parse(url).toString())
+                    } else
+                    {
+                        Toast.makeText(context , "Upcomming Features" , Toast.LENGTH_SHORT).show()
                     }
-                },
-                drawerShape = CustomShape(220.dp, 0f)
-                ) {
-                LazyColumn(modifier = Modifier.padding(it)) {
-                    item {
-                       DoneScreen()
-                    }
+
+
                 }
             }
-    
+        } ,
+        drawerShape = CustomShape(220.dp , 0f)
+    ) {
+        LazyColumn(modifier = Modifier.padding(it)) {
+            item {
+                DoneScreen()
+            }
+        }
+    }
+
 //    val scaffoldState = rememberScaffoldState()
 //    val coroutineScope = rememberCoroutineScope()
 //    val allPostState = allPostVM._getAllPostStateFlow.collectAsState()
@@ -188,20 +203,6 @@ fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //    @Composable

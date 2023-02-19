@@ -127,7 +127,7 @@ fun ReferralTreeDataScreen(navController: NavController,directReferralVM: Direct
             val data=(directReferralState.value as DirectReferralS.Loaded).data.data
             btntextreferral="Submit"
             if (data.isEmpty()){
-                Toast.makeText(context, "You Do not have referral Address", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "This Address have not referred anyone", Toast.LENGTH_SHORT).show()
             }
 
 

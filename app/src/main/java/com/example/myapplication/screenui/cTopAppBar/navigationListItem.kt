@@ -10,7 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.BaselineShift
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -55,12 +59,23 @@ import androidx.compose.ui.unit.sp
         }
 
         // label
+
         Text(
             modifier = Modifier.padding(start = 16.dp),
-            text = item.label,
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
-            color = Color.White
+            color = Color.White,
+            text = buildAnnotatedString {
+                append(item.label)
+                withStyle(style = SpanStyle(
+                    fontSize = 8.sp,
+                    baselineShift = BaselineShift.Superscript
+                ),
+
+                ) {
+                    append("Upcoming")
+                }
+            }
         )
     }
 }

@@ -5,6 +5,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.myapplication.screenui.ProfileScreen
+import com.example.myapplication.screenui.aboutus.AboutUsScreen
+import com.example.myapplication.screenui.airdrop.AirDropScreen
 import com.example.myapplication.screenui.profilescreen.EditProfile
 import com.example.myapplication.screenui.profilescreen.ProfileImageUpdateScreen
 
@@ -25,6 +27,14 @@ fun NavGraphBuilder.profileNavGraph(navController: NavHostController){
 
         composable(Screens.ProfileImageUpdateScreen.route){
            ProfileImageUpdateScreen(navController)
+        }
+
+        composable(Screens.AboutUsScreen.route){
+            AboutUsScreen(navController)
+        }
+
+        composable(Screens.AirDropScreen.route){
+            AirDropScreen(navController)
         }
 
     }

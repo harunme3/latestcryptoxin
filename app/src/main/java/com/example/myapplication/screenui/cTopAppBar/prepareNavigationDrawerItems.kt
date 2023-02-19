@@ -9,16 +9,72 @@ import com.example.myapplication.R
  fun prepareNavigationDrawerItems(): List<NavigationDrawerItem> {
     val itemsList = arrayListOf<NavigationDrawerItem>()
 
-    itemsList.add(
-        NavigationDrawerItem(
-            image = painterResource(id = R.drawable.home),
-            label = "Referral"
-        )
-    )
+//    itemsList.add(
+//        NavigationDrawerItem(
+//            image = painterResource(id = R.drawable.home),
+//            label = "Referral"
+//        )
+//    )
+//    itemsList.add(
+//        NavigationDrawerItem(
+//            image = painterResource(id = R.drawable.comment),
+//            label = "Rewards",
+//            showUnreadBubble = true
+//        )
+//    )
+
+//    itemsList.add(
+//        NavigationDrawerItem(
+//            image = painterResource(id = R.drawable.comment),
+//            label = "AirDrop",
+//            showUnreadBubble = true
+//        )
+//    )
+//
+//    itemsList.add(
+//        NavigationDrawerItem(
+//            image = painterResource(id = R.drawable.comment),
+//            label = "About Us",
+//            showUnreadBubble = true
+//        )
+//    )
+
     itemsList.add(
         NavigationDrawerItem(
             image = painterResource(id = R.drawable.comment),
-            label = "Rewards",
+            label = "Messages",
+            showUnreadBubble = true
+        )
+    )
+
+    itemsList.add(
+        NavigationDrawerItem(
+            image = painterResource(id = R.drawable.comment),
+            label = "HubIN",
+            showUnreadBubble = true
+        )
+    )
+
+    itemsList.add(
+        NavigationDrawerItem(
+            image = painterResource(id = R.drawable.comment),
+            label = "Short Video",
+            showUnreadBubble = true
+        )
+    )
+
+    itemsList.add(
+        NavigationDrawerItem(
+            image = painterResource(id = R.drawable.comment),
+            label = "Video Call",
+            showUnreadBubble = true
+        )
+    )
+
+    itemsList.add(
+        NavigationDrawerItem(
+            image = painterResource(id = R.drawable.comment),
+            label = "Audio Call",
             showUnreadBubble = true
         )
     )

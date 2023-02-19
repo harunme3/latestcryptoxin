@@ -45,7 +45,7 @@ import com.example.myapplication.ui.theme.credlight
 
 
             Image(
-                painter = painterResource(R.drawable.dummyprofilephoto),
+                painter = painterResource(R.drawable.profile),
                 contentDescription = null,
                 modifier = Modifier
                     .size(75.dp)
@@ -57,7 +57,7 @@ import com.example.myapplication.ui.theme.credlight
             Text(
                 modifier = Modifier
                     .padding(top = 8.dp),
-                text = "@praveen",
+                text = "User",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
@@ -66,7 +66,7 @@ import com.example.myapplication.ui.theme.credlight
             // user's email
             Text(
                 modifier = Modifier.padding(top = 8.dp, bottom = 30.dp),
-                text = "0xf2e....7b11",
+                text = "Wallet address",
                 fontWeight = FontWeight.Normal,
                 fontSize = 14.sp,
                 color = Color.White

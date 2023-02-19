@@ -29,4 +29,6 @@ sealed class Screens(val route:String){
     object ProfileImageUpdateScreen:Screens("profileImageUpdateScreen_route")
     object DoneScreen:Screens("doneScreen_route")
     object ReferralTreeDataScreen:Screens("referralTreeDataScreen_route")
+    object AboutUsScreen:Screens("aboutUsScreen_route")
+    object AirDropScreen:Screens("airDropScreen_route")
 }

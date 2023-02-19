@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.myapplication.screenui.FollowScreen
+import com.example.myapplication.screenui.airdrop.AirDropScreen
 import com.example.myapplication.screenui.profilescreen.FollowerScreen
 import com.example.myapplication.screenui.profilescreen.FollowingScreen
 
@@ -15,7 +16,11 @@ fun NavGraphBuilder.followNavGraph(navController: NavHostController){
         startDestination = Screens.Follow.route
     ){
         composable(Screens.Follow.route){
-            FollowScreen()
+            FollowScreen(navController)
+        }
+
+        composable(Screens.AirDropScreen.route){
+            AirDropScreen(navController)
         }
 
         composable(Screens.FollowerScreen.route){
