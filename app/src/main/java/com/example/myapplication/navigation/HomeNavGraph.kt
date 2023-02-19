@@ -7,6 +7,7 @@ import com.example.myapplication.screenui.createImport.MandatoryDetails
 import com.example.myapplication.screenui.homeui.CreateCommentScreen
 import com.example.myapplication.screenui.homeui.ViewPostDetailsScreen
 import com.example.myapplication.screenui.homeui.ViewPostScreen
+import com.example.myapplication.screenui.referral.ReferralTreeDataScreen
 
 
 fun NavGraphBuilder.homeNavGraph(navController: NavHostController){
@@ -47,6 +48,10 @@ fun NavGraphBuilder.homeNavGraph(navController: NavHostController){
 
        composable(Screens.ViewPostDetailsScreen.route){
            ViewPostDetailsScreen(navController)
+       }
+
+       composable(Screens.ReferralTreeDataScreen.route){
+           ReferralTreeDataScreen(navController)
        }
 
 

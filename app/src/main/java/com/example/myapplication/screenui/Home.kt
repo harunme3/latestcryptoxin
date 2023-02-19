@@ -53,8 +53,54 @@ import kotlinx.coroutines.launch
 fun HomeScreen(navController:NavController , allPostVM: AllPostVM= hiltViewModel(),
 
 ) {
-    
-   DoneScreen()
+       val scaffoldState = rememberScaffoldState()
+    val coroutineScope = rememberCoroutineScope()
+    val allPostState = allPostVM._getAllPostStateFlow.collectAsState()
+               val context= LocalContext.current
+            val clipboardManager: ClipboardManager = LocalClipboardManager.current
+
+
+               Scaffold(  modifier = Modifier.fillMaxSize(),
+                scaffoldState = scaffoldState,
+                topBar = {
+                    CTopAppBar(title = "CryptoxIN", modifier = Modifier, onNavIconClick = {
+                        coroutineScope.launch {
+                            scaffoldState.drawerState.open()
+                        }
+                    }, onNavIconClick2 = {
+                    navController.navigate(Screens.ReferralTreeDataScreen.route)
+                    })
+                },
+                drawerContent = {
+                    DrawerContent {
+                        coroutineScope.launch {
+                            // delay for the ripple effect
+                            delay(timeMillis = 250)
+                            scaffoldState.drawerState.close()
+
+                            if (it=="Referral"){
+                                Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
+                                navController.popBackStack()
+                                navController.navigate(Graph.REFERRAL)
+                            }
+
+                            if (it=="Rewards"){
+                                Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
+                                navController.popBackStack()
+                                navController.navigate(Graph.DAILY_CHECK_IN)
+                            }
+
+                        }
+                    }
+                },
+                drawerShape = CustomShape(220.dp, 0f)
+                ) {
+                LazyColumn(modifier = Modifier.padding(it)) {
+                    item {
+                       DoneScreen()
+                    }
+                }
+            }
     
 //    val scaffoldState = rememberScaffoldState()
 //    val coroutineScope = rememberCoroutineScope()

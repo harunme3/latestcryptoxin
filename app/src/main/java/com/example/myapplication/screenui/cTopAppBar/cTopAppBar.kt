@@ -1,5 +1,6 @@
 package com.example.myapplication.screenui.cTopAppBar
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -9,11 +10,12 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.example.myapplication.ui.theme.chonolulublue
 import com.example.myapplication.ui.theme.cwhite
 
 @Composable
- fun CTopAppBar( title:String ,modifier: Modifier, onNavIconClick: () -> Unit) {
+ fun CTopAppBar( title:String ,modifier: Modifier, onNavIconClick: () -> Unit, onNavIconClick2: () -> Unit) {
     TopAppBar(
         modifier = modifier,
         backgroundColor = chonolulublue,
@@ -34,13 +36,15 @@ import com.example.myapplication.ui.theme.cwhite
         actions = {
             IconButton(
                 onClick = {
-                 println("notification")
+                    onNavIconClick2()
                 }
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Notifications,
-                    contentDescription = "Notification"
-                )
+
+                Text(text = "Referral",color= cwhite,modifier=Modifier.padding(horizontal = 12.dp))
+//                Icon(
+//                    imageVector = Icons.Filled.Notifications,
+//                    contentDescription = "Notification"
+//                )
             }
         }
     )
